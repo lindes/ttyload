@@ -1,4 +1,4 @@
 Lots of stuff todo...  here are a few big items:
 
--	Add more platform support
 -	convert to using curses (or similar, perhaps)
+-	make the clock stamps cleaner when using large -i values
