@@ -9,7 +9,9 @@ INSTALLDIR	= /usr/local/bin
 ARCH	= `uname -s`
 LDFLAGS	= `./ldflags`
 
-OBJS	= arch/${ARCH}/getload.o arch/default/homebrews.o
+OBJS	=	arch/${ARCH}/getload.o	\
+		arch/${ARCH}/terminfo.o	\
+		arch/default/homebrews.o
 
 # this is what I use most places...
 CC=gcc -pedantic -Wall
@@ -36,7 +38,7 @@ test:		archbuild
 	./ttyload -i 1
 
 archbuild:
-	make ttyload ARCH=`uname -s`
+	make ttyload archtest ARCH=`uname -s`
 
 ttyload.c:	ttyload.h Version
 	touch ttyload.c
@@ -44,6 +46,9 @@ ttyload.c:	ttyload.h Version
 # have to be explicit here, for some make systems, like .c.o below:
 ttyload: $(OBJS) ttyload.o
 	$(CC) $(LDFLAGS) -o $@ $(OBJS) ttyload.o
+
+archtest: $(OBJS) archtest.o
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) archtest.o
 
 clean:
 	rm -f *.o $(OBJS) core a.out

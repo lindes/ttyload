@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.20 2001-08-25 06:53:32 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.21 2001-08-28 01:00:31 lindes Exp $
  *
  */
 
@@ -23,7 +23,8 @@
 
 #include "ttyload.h"
 
-#define	HEIGHTPAD	9
+#define	HEIGHTPAD	7	/* 2 lines above;
+				 * 4 lines + cursor line below */
 #define	WIDTHPAD	14
 #define	CLOCKWIDTH	7
 #define	HOSTLENGTH	30
@@ -32,7 +33,7 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.20 2001-08-25 06:53:32 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.21 2001-08-28 01:00:31 lindes Exp $";
 
 char		strbuf[BUFSIZ],
 		*optstring	= "i:hvmr:c:",
@@ -87,7 +88,6 @@ int	rows		= 40,
 	height, width;
 
 
-void	getload(load_list *);
 int	compute_height(load_t, load_t, int);
 void	showloads(load_list *);
 void	clear_screen();
@@ -113,6 +113,8 @@ int main(argc, argv, envp)
 	basename	= *argv;
     else
 	basename++;	/* go past the '/' */
+
+    gettermsize();	/* sets our globals: rows, cols */
 
     while((c = getopt(argc, argv, optstring)) != EOF)
     {
@@ -422,7 +424,7 @@ void	showloads(loadavgs)
 	}
     }
 
-    for(j=0;j<=height;j++)
+    for(j = 0; j <= height; j++)
     {
 	printf("%6.2f   ",
 		(((omax)*(height-j)) / (height))

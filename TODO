@@ -2,3 +2,4 @@ Lots of stuff todo...  here are a few big items:
 
 -	convert to using curses (or similar, perhaps)
 -	make the clock stamps cleaner when using large -i values
+-	write a man page

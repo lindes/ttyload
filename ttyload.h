@@ -8,7 +8,7 @@
  *
  */
 
-#define	TTYLOAD_H_IDENT	"$Id: ttyload.h,v 1.5 2001-08-24 07:25:16 lindes Exp $";
+#define	TTYLOAD_H_IDENT	"$Id: ttyload.h,v 1.6 2001-08-28 01:00:31 lindes Exp $";
 
 #define	MIN(a,b)	(((a)<(b))?(a):(b))
 #define	MAX(a,b)	(((a)>(b))?(a):(b))
@@ -33,3 +33,7 @@ typedef struct clock_info {
 	int	pos;
 	char	clock[6];
     } clock_info;
+
+/* functions in arch-specific files: */
+extern	void	getload(load_list *);
+extern	void	gettermsize();
