@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.6 2000-08-16 22:02:31 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.7 2001-02-24 09:06:13 lindes Exp $
  *
  */
 
@@ -21,6 +21,7 @@
 #endif
 #include <sys/types.h>
 #include <unistd.h>
+#include <time.h>
 
 #include "ttyload.h"
 
@@ -32,7 +33,7 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.6 2000-08-16 22:02:31 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.7 2001-02-24 09:06:13 lindes Exp $";
 
 char		*kmemfile	= "/dev/kmem",
 		strbuf[BUFSIZ],
@@ -44,8 +45,11 @@ char		*kmemfile	= "/dev/kmem",
 		    "the interval between refreshes\n"
 		    "     The default is 4, and the minimum "
 		    "is 1, which is silently clamped.\n";
-int		kmemfd,clockpad,clocks;
+int		kmemfd, clockpad, clocks;
 clock_info	*theclocks;
+
+/* version ID, passed in by the Makefile: */
+char		*version	= VERSION;
 
 char *loadstrings[] = {
 	" ",	/* blank */
@@ -69,17 +73,17 @@ int	rows		= 40,
 	theclock	= 0,
 
 	height, width/* ,
-	c,i,j,k */;
+	c, i, j, k */;
 
 
-// void	getload(long,long,load_list *);
+// void	getload(long, long, load_list *);
 void	getload(load_list *);
-int	compute_height(load_t,load_t,int);
+int	compute_height(load_t, load_t, int);
 void	showloads(load_list *);
 void	clear_screen();
-void	cycle_load_list(load_list*,load_list,int);
+void	cycle_load_list(load_list*, load_list, int);
 
-int main(argc,argv,envp)
+int main(argc, argv, envp)
     int		argc;
     char	*argv[],
 		*envp[];
@@ -87,13 +91,13 @@ int main(argc,argv,envp)
     float	multiplier;
     load_t	loadaddr;
     load_list	*loadavgs, newload;
-    int		c,i,j,k,errflag=0;
+    int		c, i, j, k, errflag=0;
     char	*basename;
-    char	hostname[HOSTLENGTH];
+    char	hostname[HOSTLENGTH + 1];
     time_t	thetime;
     struct tm	*thetimetm;
 
-    while((c = getopt(argc,argv,optstring)) != EOF)
+    while((c = getopt(argc, argv, optstring)) != EOF)
     {
 	switch(c)
 	{
@@ -107,30 +111,40 @@ int main(argc,argv,envp)
     }
     if(errflag)
     {
-	fprintf(stderr,usage,basename);
+	fprintf(stderr, usage, basename);
 	exit(1);
     }
 
-    if(gethostname(hostname,HOSTLENGTH))
+    if(gethostname(hostname, HOSTLENGTH))
     {
 	perror("NOTICE: couldn't determine hostname");
-	strcpy(hostname,"localhost");
+	strcpy(hostname, "localhost");
 	sleep(2);
     }
 
-    basename		= (char *)strrchr(*argv,'/');
+    /* do space-padding of hostname out to HOSTLENGTH chars: */
+    for(i = 0; i < (HOSTLENGTH); i++)
+    {
+    	if(hostname[i] == '\0')
+	{
+	    hostname[i]		= ' ';
+	    hostname[i + 1]	= '\0';
+	}
+    }
+
+    basename		= (char *)strrchr(*argv, '/');
     if(!basename)
 	basename	= *argv;
 
-    intsecs	= MAX(1,intsecs);	/* must be positive */
+    intsecs	= MAX(1, intsecs);	/* must be positive */
     height	= rows - HEIGHTPAD;
     width	= cols - WIDTHPAD;
-    clocks	= MAX(width/intsecs,width/CLOCKWIDTH);
+    clocks	= MAX(width/intsecs, width/CLOCKWIDTH);
     clockpad	= (width / clocks) - CLOCKWIDTH;
 
     if(rows < MINROWS)
     {
-	fprintf(stderr,"Sorry, %s requires at least %d rows to run.\n",
+	fprintf(stderr, "Sorry, %s requires at least %d rows to run.\n",
 		basename,
 		MINROWS,
 	    NULL);
@@ -138,15 +152,15 @@ int main(argc,argv,envp)
     }
     if(cols < MINCOLS)
     {
-	fprintf(stderr,"Sorry, %s requires at least %d cols to run.\n",
+	fprintf(stderr, "Sorry, %s requires at least %d cols to run.\n",
 		basename,
 		MINCOLS,
 	    NULL);
 	exit(1);
     }
 
-    loadavgs	= (load_list *)calloc(width,sizeof(load_list));
-    theclocks	= (clock_info *)calloc(clocks,sizeof(clock_info));
+    loadavgs	= (load_list *)calloc(width, sizeof(load_list));
+    theclocks	= (clock_info *)calloc(clocks, sizeof(clock_info));
 
     if(!loadavgs)
     {
@@ -166,7 +180,7 @@ int main(argc,argv,envp)
     }
 
 #if 0	/* need to pull this */
-    loadaddr	= sysmp(MP_KERNADDR,MPKA_AVENRUN);
+    loadaddr	= sysmp(MP_KERNADDR, MPKA_AVENRUN);
 
     if(loadaddr == -1)
     {
@@ -174,7 +188,7 @@ int main(argc,argv,envp)
 	exit(1);
     }
 
-    kmemfd	= open(kmemfile,O_RDONLY);
+    kmemfd	= open(kmemfile, O_RDONLY);
 
     if(kmemfd < 0)
     {
@@ -191,20 +205,21 @@ int main(argc,argv,envp)
 	}
 
 	time(&thetime);
+
 	thetimetm	= localtime(&thetime);
 
 	getload(&loadavgs[i]);
 
 	if(((thetimetm->tm_sec) / intsecs) == 0)
 	{
-	    if(!ascftime(strbuf,"^%H:%M",thetimetm))
+	    if(!ascftime(strbuf, "^%H:%M", thetimetm))
 	    {
 		/* This should never happen, I hope... */
 		perror("ascftime failed");
 		exit(1);
 	    }
 	    theclocks[theclock].pos	= i;
-	    strcpy(theclocks[theclock].clock,strbuf);
+	    strcpy(theclocks[theclock].clock, strbuf);
 	    theclock++;
 	    theclock	%= clocks;
 
@@ -214,12 +229,12 @@ int main(argc,argv,envp)
 		   where it well never happen...  As I first
 		   write it, I'm fairly certain it will, but
 		   that should be fixable... */
-		fprintf(stderr,"Internal error: too many clocks!");
+		fprintf(stderr, "Internal error: too many clocks!");
 		exit(1);
 	    }
 	}
 
-	if(!ascftime(strbuf,"%T",thetimetm))
+	if(!ascftime(strbuf, "%T", thetimetm))
 	{
 	    /* This should never happen, I hope... */
 	    perror("ascftime failed");
@@ -228,14 +243,13 @@ int main(argc,argv,envp)
 
 	clear_screen();
 
-	printf("%-1$*6$.*7$s   %2$.2f, %.2f, %.2f   %s\n\n",
+	printf("%s   %.2f, %.2f, %.2f   %s       ttyload %s\n\n",
 		hostname,
-		loadavgs[i].one_minute / 1024.,
-		loadavgs[i].five_minute / 1024.,
-		loadavgs[i].fifteen_minute / 1024.,
-		strbuf,
-
-		HOSTLENGTH+1,HOSTLENGTH,
+		(loadavgs[i].one_minute / 1024.),
+		(loadavgs[i].five_minute / 1024.),
+		(loadavgs[i].fifteen_minute / 1024.),
+		strbuf + 1,
+		version,
 	    NULL);
 
 	if(debug > 3)
@@ -255,7 +269,7 @@ int main(argc,argv,envp)
 		sleep(3);
 	    }
 	    getload(&newload);
-	    cycle_load_list(loadavgs,newload,width);
+	    cycle_load_list(loadavgs, newload, width);
 	    i--;
 	}
     }
@@ -264,20 +278,20 @@ int main(argc,argv,envp)
 void	showloads(loadavgs)
     load_list	*loadavgs;
 {
-    load_list	min	= {LONG_MAX-1,LONG_MAX-1,LONG_MAX-1,0,0,0},
-		max	= {0,0,0,0,0,0};
-    load_t	lmin,lmax;
-    float	omin,omax;
-    int		i,j,k;
+    load_list	min	= {LONG_MAX-1, LONG_MAX-1, LONG_MAX-1, 0, 0, 0},
+		max	= {0, 0, 0, 0, 0, 0};
+    load_t	lmin, lmax;
+    float	omin, omax;
+    int		i, j, k;
 
     if(debug>3)
     {
-	printf("Starting with min set: %d,%d,%d\n",
+	printf("Starting with min set: %d, %d, %d\n",
 		min.one_minute,
 		min.five_minute,
 		min.fifteen_minute,
 	    NULL);
-	printf("Starting with first set: %d,%d,%d\n",
+	printf("Starting with first set: %d, %d, %d\n",
 		loadavgs[0].one_minute,
 		loadavgs[0].five_minute,
 		loadavgs[0].fifteen_minute,
@@ -288,19 +302,19 @@ void	showloads(loadavgs)
     {
 	if(debug>9)
 	{
-	    printf("Checking for min/max at %d...\n",i);
+	    printf("Checking for min/max at %d...\n", i);
 	    printf("Comparing, for example, %d <=> %d\n",
-		    min.one_minute,loadavgs[i].one_minute,
+		    min.one_minute, loadavgs[i].one_minute,
 		NULL);
 	}
-	min.one_minute	= MIN(min.one_minute,loadavgs[i].one_minute);
-	min.five_minute	= MIN(min.five_minute,loadavgs[i].five_minute);
+	min.one_minute	= MIN(min.one_minute, loadavgs[i].one_minute);
+	min.five_minute	= MIN(min.five_minute, loadavgs[i].five_minute);
 	min.fifteen_minute
-		= MIN(min.fifteen_minute,loadavgs[i].fifteen_minute);
-	max.one_minute	= MAX(max.one_minute,loadavgs[i].one_minute);
-	max.five_minute	= MAX(max.five_minute,loadavgs[i].five_minute);
+		= MIN(min.fifteen_minute, loadavgs[i].fifteen_minute);
+	max.one_minute	= MAX(max.one_minute, loadavgs[i].one_minute);
+	max.five_minute	= MAX(max.five_minute, loadavgs[i].five_minute);
 	max.fifteen_minute
-		= MAX(max.fifteen_minute,loadavgs[i].fifteen_minute);
+		= MAX(max.fifteen_minute, loadavgs[i].fifteen_minute);
     }
     if(debug>3)
     {
@@ -326,11 +340,11 @@ void	showloads(loadavgs)
 		max.fifteen_minute / 1024.,
 	    NULL);
     }
-    lmin=MIN(min.one_minute,MIN(min.five_minute,min.fifteen_minute));
-    lmax=MAX(max.one_minute,MAX(max.five_minute,max.fifteen_minute));
+    lmin=MIN(min.one_minute, MIN(min.five_minute, min.fifteen_minute));
+    lmax=MAX(max.one_minute, MAX(max.five_minute, max.fifteen_minute));
 
     if(debug > 3)
-	printf("Overall MIN, MAX: %f, %f\n",lmin/1024.,lmax/1024.);
+	printf("Overall MIN, MAX: %f, %f\n", lmin/1024., lmax/1024.);
 
     omin	= (int)(lmin / 1024);
     lmin	= 1024 * omin;
@@ -351,19 +365,19 @@ void	showloads(loadavgs)
 
     if(debug > 3)
     {
-	printf("Boundaries: %d, %d...  ",omin,omax);
-	printf("Long Boundaries: %d, %d\n",lmin,lmax);
+	printf("Boundaries: %d, %d...  ", omin, omax);
+	printf("Long Boundaries: %d, %d\n", lmin, lmax);
     }
 
 
     for(i=0;i<width;i++)
     {
 	loadavgs[i].height1 =
-	compute_height(loadavgs[i].one_minute,lmax,height);
+	compute_height(loadavgs[i].one_minute, lmax, height);
 	loadavgs[i].height5 =
-	compute_height(loadavgs[i].five_minute,lmax,height);
+	compute_height(loadavgs[i].five_minute, lmax, height);
 	loadavgs[i].height15 =
-	compute_height(loadavgs[i].fifteen_minute,lmax,height);
+	compute_height(loadavgs[i].fifteen_minute, lmax, height);
 
 	if(debug > 3)
 	{
@@ -394,12 +408,12 @@ void	showloads(loadavgs)
 		k+=FIVE;
 	    if(loadavgs[i].height15	== j)
 		k+=FIFTEEN;
-	    printf("%s",loadstrings[k]);
+	    printf("%s", loadstrings[k]);
 	}
 	printf("\n");
     }
 
-    memset(strbuf,' ',BUFSIZ);
+    memset(strbuf, ' ', BUFSIZ);
     strbuf[cols-1]	= '\0';
 
     for(i=0;i<clocks;i++)
@@ -429,17 +443,17 @@ void	showloads(loadavgs)
 }
 
 #if 0	/* being phased out... ugliness. */
-void	getload(kmemfd,loadaddr,loadavgs)
-    long	kmemfd,loadaddr;
+void	getload(kmemfd, loadaddr, loadavgs)
+    long	kmemfd, loadaddr;
     load_list	*loadavgs;
 {
-    if((lseek(kmemfd,loadaddr,SEEK_SET)) != loadaddr)
+    if((lseek(kmemfd, loadaddr, SEEK_SET)) != loadaddr)
     {
 	perror("Couldn't seek to load address");
 	exit(1);
     }
 
-    if((read(kmemfd,loadavgs,3*sizeof(load_t))) != 3*sizeof(load_t))
+    if((read(kmemfd, loadavgs, 3*sizeof(load_t))) != 3*sizeof(load_t))
     {
 	perror("Couldn't read load data");
 	exit(1);
@@ -447,7 +461,7 @@ void	getload(kmemfd,loadaddr,loadavgs)
 }
 #endif
 
-int	compute_height(thisload,maxload,height)
+int	compute_height(thisload, maxload, height)
     load_t	thisload,
 		maxload;
     int		height;
@@ -460,7 +474,7 @@ void	clear_screen()
     printf("\033[H\033[2J");
 }
 
-void	cycle_load_list(loadavgs,newload,width)
+void	cycle_load_list(loadavgs, newload, width)
     load_list	*loadavgs,
 		newload;
     int		width;
