@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.11 2001-02-27 03:52:51 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.12 2001-08-23 00:52:44 lindes Exp $
  *
  */
 
@@ -33,18 +33,21 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.11 2001-02-27 03:52:51 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.12 2001-08-23 00:52:44 lindes Exp $";
 
 char		*kmemfile	= "/dev/kmem",
 		strbuf[BUFSIZ],
-		*optstring	= "i:",
+		*optstring	= "i:hv",
 		*usage	=
 		    "Usage: %s [-i secs]\n"
+		    "  -h -- show this help, then exit\n"
+		    "  -v -- show version info, then exit\n"
 		    "  -i secs\n"
 		    "     Alter the number of seconds in "
-		    "the interval between refreshes\n"
+			"the interval between refreshes\n"
 		    "     The default is 4, and the minimum "
-		    "is 1, which is silently clamped.\n";
+			"is 1, which is silently clamped.\n\n"
+		    "  (Note: use ctrl-C to quit)\n";
 int		kmemfd, clockpad, clocks;
 clock_info	*theclocks;
 
@@ -92,11 +95,18 @@ int main(argc, argv, envp)
     float	multiplier;
     load_t	loadaddr;
     load_list	*loadavgs, newload;
-    int		c, i, j, k, errflag=0;
+    int		c, i, j, k, errflag=0, versflag=0;
     char	*basename;
     char	hostname[HOSTLENGTH + 1];
     time_t	thetime;
     struct tm	*thetimetm;
+
+    /* set up the basename variable, used for Usage, etc. */
+    basename		= (char *)strrchr(*argv, '/');
+    if(!basename)
+	basename	= *argv;
+    else
+	basename++;	/* go past the '/' */
 
     while((c = getopt(argc, argv, optstring)) != EOF)
     {
@@ -105,16 +115,25 @@ int main(argc, argv, envp)
 	    case 'i':
 		intsecs	= atoi(optarg);
 		break;
+	    case 'v':
+	    	versflag++;
+	    	break;
+	    case 'h':
 	    default:
 		errflag++;
 		break;	/* redundant */
 	}
     }
+
+    /* version info requested, show it: */
+    if(versflag)
+	fprintf(stderr, "%s version %s\n", basename, version);
+    /* error, show usage: */
     if(errflag)
-    {
 	fprintf(stderr, usage, basename);
+    /* for either, we exit: */
+    if(errflag || versflag)
 	exit(1);
-    }
 
     if(gethostname(hostname, HOSTLENGTH))
     {
@@ -132,10 +151,6 @@ int main(argc, argv, envp)
 	    hostname[i + 1]	= '\0';
 	}
     }
-
-    basename		= (char *)strrchr(*argv, '/');
-    if(!basename)
-	basename	= *argv;
 
     intsecs	= MAX(1, intsecs);	/* must be positive */
     height	= rows - HEIGHTPAD;
