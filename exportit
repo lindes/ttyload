@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# exportit -- a simple little script to export something and
+# make a tarbal of it, in mostly automated fasion.  Could do
+# more error checking, but if things are happy, it works.  :-)
+
+name=ttyload
+
+path=`cat CVS/Repository`
+version=`cat Version`
+cvsvers=${name}_`echo "$version" | sed -e 's/[ \.]/_/g'`
+dirname="$name-$version"
+
+echo "Creating export of $name version $version (CVS: $cvsvers)"
+
+cvs export -d "$dirname" -r "$cvsvers" $path
+tar cvf "$dirname.tar" "$dirname"
+gzip -9fv "$dirname.tar"
