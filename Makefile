@@ -1,3 +1,11 @@
+# Makefile for ttyload
+# Copyright 2001 by David Lindes, All Rights Reserved
+# see the "LICENSE" file for licensing info.
+
+# change this if you want to use 'make install' and have it go
+# somewhere else:
+INSTALLDIR	= /usr/local/bin
+
 ARCH	= `uname -s`
 
 OBJS	= arch/${ARCH}/getload.o arch/default/homebrews.o
@@ -6,10 +14,13 @@ OBJS	= arch/${ARCH}/getload.o arch/default/homebrews.o
 CC=gcc
 
 # for the things in the sub-directory:
-INCLUDES	= -I${PWD} -I ${PWD}/arch/${ARCH} -I${PWD}/arch/default
+INCLUDES	=	-I$${PWD:-.} \
+			-I$${PWD:-.}/arch/${ARCH} \
+			-I$${PWD:-.}/arch/default
 
-# Hopefully you don't need this:
-OTHER_FLAGS	= -DNEED_LOCAL_HEADERS
+# Hopefully you don't need this... on Solaris (SunOS), though,
+# you probably do.  Uncomment it if things don't build:
+# OTHER_FLAGS	= -DNEED_LOCAL_HEADERS
 
 # Debugging compiles?
 DEBUG	= -g
@@ -18,7 +29,9 @@ VERSION	= -DVERSION='"'`cat Version`'"'
 
 CFLAGS	= $(INCLUDES) $(OTHER_FLAGS) $(DEBUG) $(VERSION)
 
-default:	archbuild loader
+PROGRAMS =	archbuild loader
+
+default:	$(PROGRAMS)
 
 test:		archbuild
 	./ttyload -i 1
@@ -33,3 +46,10 @@ ttyload: $(OBJS) ttyload.o
 
 clean:
 	rm -f *.o $(OBJS)
+
+clobber:	clean
+	rm -f $(PROGRAMS)
+
+# install, gently.  not much to it:
+install:	archbuild
+	/bin/cp -i ttyload ${INSTALLDIR}/ttyload
