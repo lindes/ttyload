@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.12 2001-08-23 00:52:44 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.13 2001-08-24 01:57:03 lindes Exp $
  *
  */
 
@@ -33,7 +33,7 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.12 2001-08-23 00:52:44 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.13 2001-08-24 01:57:03 lindes Exp $";
 
 char		*kmemfile	= "/dev/kmem",
 		strbuf[BUFSIZ],
@@ -47,7 +47,9 @@ char		*kmemfile	= "/dev/kmem",
 			"the interval between refreshes\n"
 		    "     The default is 4, and the minimum "
 			"is 1, which is silently clamped.\n\n"
-		    "  (Note: use ctrl-C to quit)\n";
+		    "  (Note: use ctrl-C to quit)\n\n"
+		    "  For updates and other info, see http://"
+		    	"www.daveltd.com/src/util/ttyload/\n";
 int		kmemfd, clockpad, clocks;
 clock_info	*theclocks;
 
