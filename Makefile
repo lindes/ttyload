@@ -44,7 +44,9 @@ archbuild:
 ttyload.c:	ttyload.h Version
 	touch ttyload.c
 
+# have to be explicit here, for some make systems, like .c.o below:
 ttyload: $(OBJS) ttyload.o
+	$(CC) -o $@ $(OBJS) ttyload.o
 
 clean:
 	rm -f *.o $(OBJS)
@@ -54,4 +56,16 @@ clobber:	clean
 
 # install, gently.  not much to it:
 install:	archbuild
-	/bin/cp -i ttyload ${INSTALLDIR}/ttyload
+	/bin/cp ttyload ${INSTALLDIR}/ttyload
+	if [ ${ARCH} = IRIX ];				\
+	then						\
+		/bin/chgrp sys ${INSTALLDIR}/ttyload;	\
+		/bin/chmod g+s ${INSTALLDIR}/ttyload;	\
+	fi
+
+# because different systems' make have different behaviors on how they
+# deal with building stuff in subdirectories, and because I don't feel
+# like descending into the subdirectories to make a single object file,
+# I'll force the .c.o rule to what I'm expecting:
+.c.o:
+	$(CC) $(CFLAGS) -o $@ -c $<
