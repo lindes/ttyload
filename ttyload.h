@@ -8,7 +8,7 @@
  *
  */
 
-char *h="$Id: ttyload.h,v 1.2 1996-06-16 02:53:51 lindes Exp $";
+char *h="$Id: ttyload.h,v 1.3 1996-06-16 19:28:21 lindes Exp $";
 
 #define	MIN(a,b)	(((a)<(b))?(a):(b))
 #define	MAX(a,b)	(((a)>(b))?(a):(b))
@@ -39,14 +39,7 @@ typedef struct load_list {
 	int	height15;
     } load_list;
 
-/* The following variables should probably be assigned using
-   some sort of real logic, rather than these hard-coded
-   defaults, but the defaults work for now... */
-int	rows	= 40,
-	cols	= 80,
-	height	= 35,
-	width	= 70,
-	intsec	= 1,
-	i,j,k;
-
-
+typedef struct clock_info {
+	int	pos;
+	char	clock[6];
+    } clock_info;
