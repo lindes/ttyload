@@ -8,7 +8,7 @@
  *
  */
 
-char *h="$Id: ttyload.h,v 1.3 1996-06-16 19:28:21 lindes Exp $";
+static char *h="$Id: ttyload.h,v 1.4 2000-05-20 01:31:30 lindes Exp $";
 
 #define	MIN(a,b)	(((a)<(b))?(a):(b))
 #define	MAX(a,b)	(((a)>(b))?(a):(b))
@@ -16,17 +16,6 @@ char *h="$Id: ttyload.h,v 1.3 1996-06-16 19:28:21 lindes Exp $";
 #define	ONE	01;
 #define	FIVE	02;
 #define	FIFTEEN	04;
-
-char *loadstrings[] = {
-	" ",	/* blank */
-	"\033[31m*\033[m",	/* one minute average */
-	"\033[32m*\033[m",	/* five minute average */
-	"\033[33m*\033[m",	/* one & five, together */
-	"\033[34m*\033[m",	/* fifteen minute average */
-	"\033[35m*\033[m",	/* one & fifteen, together */
-	"\033[36m*\033[m",	/* five & fifteen, together */
-	"\033[37m*\033[m"	/* one, five & fifteen, together */
-    };
 
 typedef	long	load_t;
 
@@ -37,6 +26,7 @@ typedef struct load_list {
 	int	height1;
 	int	height5;
 	int	height15;
+	int	numloads;
     } load_list;
 
 typedef struct clock_info {

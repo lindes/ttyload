@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.4 1996-06-16 19:28:21 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.5 2000-05-20 01:31:30 lindes Exp $
  *
  */
 
@@ -15,7 +15,9 @@
 #include <stdlib.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
+#if 0
 #include <sys/sysmp.h>
+#endif
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -29,7 +31,7 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.4 1996-06-16 19:28:21 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.5 2000-05-20 01:31:30 lindes Exp $";
 
 char		*kmemfile	= "/dev/kmem",
 		strbuf[BUFSIZ],
@@ -43,6 +45,17 @@ char		*kmemfile	= "/dev/kmem",
 		    "is 1, which is silently clamped.\n";
 int		kmemfd,clockpad,clocks;
 clock_info	*theclocks;
+
+char *loadstrings[] = {
+	" ",	/* blank */
+	"\033[31m*\033[m",	/* one minute average */
+	"\033[32m*\033[m",	/* five minute average */
+	"\033[33m*\033[m",	/* one & five, together */
+	"\033[34m*\033[m",	/* fifteen minute average */
+	"\033[35m*\033[m",	/* one & fifteen, together */
+	"\033[36m*\033[m",	/* five & fifteen, together */
+	"\033[37m*\033[m"	/* one, five & fifteen, together */
+    };
 
 /* The following two variables should probably be assigned
    using some sort of real logic, rather than these hard-coded
@@ -58,7 +71,8 @@ int	rows		= 40,
 	c,i,j,k */;
 
 
-void	getload(long,long,load_list *);
+// void	getload(long,long,load_list *);
+void	getload(load_list *);
 int	compute_height(load_t,load_t,int);
 void	showloads(load_list *);
 void	clear_screen();
@@ -150,6 +164,7 @@ int main(argc,argv,envp)
 	theclocks[i].pos	= -1;
     }
 
+#if 0	/* need to pull this */
     loadaddr	= sysmp(MP_KERNADDR,MPKA_AVENRUN);
 
     if(loadaddr == -1)
@@ -165,6 +180,7 @@ int main(argc,argv,envp)
 	perror("Couldn't open memory file");
 	exit(1);
     }
+#endif	/* 0 */
 
     for(i=0;i<width;i++)
     {
@@ -176,7 +192,7 @@ int main(argc,argv,envp)
 	time(&thetime);
 	thetimetm	= localtime(&thetime);
 
-	getload(kmemfd,loadaddr,&loadavgs[i]);
+	getload(&loadavgs[i]);
 
 	if(((thetimetm->tm_sec) / intsecs) == 0)
 	{
@@ -237,7 +253,7 @@ int main(argc,argv,envp)
 		printf("CYCLING LOAD LIST...\n");
 		sleep(3);
 	    }
-	    getload(kmemfd,loadaddr,&newload);
+	    getload(&newload);
 	    cycle_load_list(loadavgs,newload,width);
 	    i--;
 	}
@@ -411,6 +427,7 @@ void	showloads(loadavgs)
 	NULL);
 }
 
+#if 0	/* being phased out... ugliness. */
 void	getload(kmemfd,loadaddr,loadavgs)
     long	kmemfd,loadaddr;
     load_list	*loadavgs;
@@ -427,6 +444,7 @@ void	getload(kmemfd,loadaddr,loadavgs)
 	exit(1);
     }
 }
+#endif
 
 int	compute_height(thisload,maxload,height)
     load_t	thisload,
