@@ -77,9 +77,9 @@ know also if it runs unmodified on any other platforms.
 
 to build ttyload, in theory all you need to is type 'make'.  If
 you want to also install it, 'make install' should do the trick,
-which will gently (i.e. with cp -i) copy it to /usr/local/bin
-(or another directory if you edit the INSTALLDIR setting in the
-Makefile or do 'make install INSTALLDIR=whatever').
+which will copy it to /usr/local/bin (or another directory if
+you edit the INSTALLDIR setting in the Makefile or do
+'make install INSTALLDIR=whatever').
 
 ****************
 * RUN-TIME FOO *

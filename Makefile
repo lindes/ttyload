@@ -53,7 +53,7 @@ clobber:	clean
 
 # install, gently.  not much to it:
 install:	archbuild
-	/bin/cp -i ttyload ${INSTALLDIR}/ttyload
+	/bin/cp ttyload ${INSTALLDIR}/ttyload
 
 # because different systems' make have different behaviors on how they
 # deal with building stuff in subdirectories, and because I don't feel
