@@ -1,3 +1,11 @@
+/*
+ * loader.c -- a time-limited, max-load-limited load bomb
+ *
+ * In general, you don't want to run this.
+ *
+ * Copyright 2001, David Lindes, All Rights Reserved.
+ */
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
