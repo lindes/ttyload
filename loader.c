@@ -9,8 +9,9 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <time.h>
 
-int main(int argc, char *argv)
+int main(int argc, char *argv[])
 {
     int		ttl,	/* how long to load things */
 		forks;	/* how many jobs to run at once */
@@ -25,8 +26,18 @@ int main(int argc, char *argv)
 
     for(/*pre-initted*/; --forks > 0 ;)
     {
-	if(pid = fork())
+	if((pid = fork()) != 0)
+	{
+	    /* check to see if the fork actually failed: */
+	    if(pid < 0)
+	    {
+	    	perror("fork failed");
+		exit(1);
+	    }
+
+	    /* otherwise, we're a child... */
 	    break;	/* don't continue this loop as child. */
+	}
     }
 
     printf("Bomb running for %d seconds\n", ttl);
