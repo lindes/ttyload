@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.17 2001-08-24 07:25:16 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.18 2001-08-25 03:18:26 lindes Exp $
  *
  */
 
@@ -32,14 +32,17 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.17 2001-08-24 07:25:16 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.18 2001-08-25 03:18:26 lindes Exp $";
 
 char		strbuf[BUFSIZ],
-		*optstring	= "i:hv",
+		*optstring	= "i:hvmr:c:",
 		*usage	=
 		    "Usage: %s [-i secs]\n"
 		    "  -h -- show this help, then exit\n"
 		    "  -v -- show version info, then exit\n"
+		    "  -m -- monochrome mode\n"
+		    "  -c cols -- how many cols wide is the screen?\n"
+		    "  -r rows -- how many rows high is the screen?\n"
 		    "  -i secs\n"
 		    "     Alter the number of seconds in "
 			"the interval between refreshes\n"
@@ -54,7 +57,7 @@ clock_info	*theclocks;
 /* version ID, passed in by the Makefile: */
 char		*version	= VERSION;
 
-char *loadstrings[] = {
+char *color_loadstrings[] = {
 	" ",	/* blank */
 	"\033[31m*\033[m",	/* one minute average */
 	"\033[32m*\033[m",	/* five minute average */
@@ -64,6 +67,12 @@ char *loadstrings[] = {
 	"\033[36m*\033[m",	/* five & fifteen, together */
 	"\033[37m*\033[m"	/* one, five & fifteen, together */
     };
+
+/* same stuff, same order: */
+char *mono_loadstrings[] = { " ", "1", "2", "3", "4", "5", "6", "7" };
+
+/* by default, use color: */
+char **loadstrings = color_loadstrings;
 
 /* The following two variables should probably be assigned
    using some sort of real logic, rather than these hard-coded
@@ -84,6 +93,7 @@ void	showloads(load_list *);
 void	clear_screen();
 void	home_screen();
 void	cycle_load_list(load_list*, load_list, int);
+void	initialize_load_list(load_list *list, int size);
 
 int main(argc, argv, envp)
     int		argc;
@@ -108,9 +118,25 @@ int main(argc, argv, envp)
     {
 	switch(c)
 	{
+	    /* timing interval: */
 	    case 'i':
 		intsecs	= atoi(optarg);
 		break;
+
+	    /* display mode selection: */
+	    case 'm':
+	    	loadstrings	= mono_loadstrings;
+		break;
+
+	    /* height/width stuff...  error checking done later.  */
+	    case 'r':
+	    	rows	= atoi(optarg);
+		break;
+	    case 'c':
+	    	cols	= atoi(optarg);
+		break;
+
+	    /* help and such, plus default: */
 	    case 'v':
 	    	versflag++;
 	    	break;
@@ -170,6 +196,8 @@ int main(argc, argv, envp)
     loadavgs	= (load_list *)calloc(width, sizeof(load_list));
     theclocks	= (clock_info *)calloc(clocks, sizeof(clock_info));
 
+    initialize_load_list(loadavgs, width);
+
     if(!loadavgs)
     {
 	perror("calloc for loadavgs failed");
@@ -209,10 +237,10 @@ int main(argc, argv, envp)
 
 	if(((thetimetm->tm_sec) / intsecs) == 0)
 	{
-	    if(!ascftime(strbuf, "^%H:%M", thetimetm))
+	    if(!strftime(strbuf, 7, "^%H:%M", thetimetm))
 	    {
 		/* This should never happen, I hope... */
-		perror("ascftime failed");
+		perror("strftime failed");
 		exit(1);
 	    }
 	    theclocks[theclock].pos	= i;
@@ -242,10 +270,10 @@ int main(argc, argv, envp)
 	    clear_screen();
 	}
 
-	if(!ascftime(strbuf, "%T", thetimetm))
+	if(!strftime(strbuf, 9, "%T", thetimetm))
 	{
 	    /* This should never happen, I hope... */
-	    perror("ascftime failed");
+	    perror("strftime failed");
 	    exit(1);
 	}
 
@@ -448,7 +476,16 @@ int	compute_height(thisload, maxload, height)
 		maxload;
     int		height;
 {
-    return(/*height-*/(height*((maxload-thisload)/(float)maxload)));
+    /* if thisload is negative (done by initialization), return
+     * something impossible, so we don't draw bogus data: */
+    if(thisload < 0)
+    	return(height + 1);
+
+    /* this is a reversal of what you might thing... the X axis
+     * is really on the top of the graph, so larger heights sit
+     * lower.  the 'height -' part is implicitly done elsewhere.
+     * (but not really ever actually done) */
+    return(/* height- */ ( height * ( (maxload - thisload) / (float)maxload ) ) );
 }
 
 void	clear_screen()
@@ -480,5 +517,17 @@ void	cycle_load_list(loadavgs, newload, width)
     for(i=0;i<clocks;i++)
     {
 	theclocks[i].pos--;
+    }
+}
+
+void	initialize_load_list(load_list *list, int size)
+{
+    int		i;
+
+    for(i = width; i-- ;)
+    {
+    	list[i].one_minute	= -1;
+    	list[i].five_minute	= -1;
+    	list[i].fifteen_minute	= -1;
     }
 }
