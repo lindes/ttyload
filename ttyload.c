@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.19 2001-08-25 05:07:41 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.20 2001-08-25 06:53:32 lindes Exp $
  *
  */
 
@@ -32,7 +32,7 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.19 2001-08-25 05:07:41 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.20 2001-08-25 06:53:32 lindes Exp $";
 
 char		strbuf[BUFSIZ],
 		*optstring	= "i:hvmr:c:",
@@ -270,7 +270,7 @@ int main(argc, argv, envp)
 	    clear_screen();
 	}
 
-	if(!strftime(strbuf, 9, "%T", thetimetm))
+	if(!strftime(strbuf, 9, "%H:%M:%S", thetimetm))
 	{
 	    /* This should never happen, I hope... */
 	    perror("strftime failed");

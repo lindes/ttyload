@@ -7,6 +7,8 @@
 
 #include "ttyload.h"
 
+#include <stdio.h>	/* for perror() */
+#include <unistd.h>	/* for exit() */
 #include <sys/types.h>	/* sys/syget.h needs this */
 #include <sys/sysget.h>	/* for sysget() */
 
