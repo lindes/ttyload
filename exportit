@@ -4,15 +4,22 @@
 # make a tarbal of it, in mostly automated fasion.  Could do
 # more error checking, but if things are happy, it works.  :-)
 
+# name you wanna call this...  Perhaps this should be `basename
+# $path`, but whatever:
 name=ttyload
 
+# automagical settings for things:
 path=`cat CVS/Repository`
 version=`cat Version`
 cvsvers=${name}_`echo "$version" | sed -e 's/[ \.]/_/g'`
 dirname="$name-$version"
 
+# let the user know what the settings came up with:
 echo "Creating export of $name version $version (CVS: $cvsvers)"
 
-cvs export -d "$dirname" -r "$cvsvers" $path
+# export, and if that fails, bail.
+cvs export -d "$dirname" -r "$cvsvers" $path || exit 1
+
+# then tar and gzip:
 tar cvf "$dirname.tar" "$dirname"
 gzip -9fv "$dirname.tar"
