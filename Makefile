@@ -54,7 +54,7 @@ clean:
 	rm -f *.o $(OBJS) core a.out
 
 clobber:	clean
-	rm -f loader ttyload
+	rm -f loader ttyload archtest
 
 # install, gently.  not much to it:
 install:	archbuild
