@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.7 2001-02-24 09:06:13 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.8 2001-02-24 10:00:51 lindes Exp $
  *
  */
 
@@ -33,7 +33,7 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.7 2001-02-24 09:06:13 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.8 2001-02-24 10:00:51 lindes Exp $";
 
 char		*kmemfile	= "/dev/kmem",
 		strbuf[BUFSIZ],
@@ -243,7 +243,7 @@ int main(argc, argv, envp)
 
 	clear_screen();
 
-	printf("%s   %.2f, %.2f, %.2f   %s       ttyload %s\n\n",
+	printf("%s   %.2f, %.2f, %.2f   %s       ttyload, v%s\n\n",
 		hostname,
 		(loadavgs[i].one_minute / 1024.),
 		(loadavgs[i].five_minute / 1024.),
