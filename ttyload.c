@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.22 2001-08-28 01:03:31 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.23 2004-07-01 19:13:13 lindes Exp $
  *
  */
 
@@ -33,7 +33,7 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.22 2001-08-28 01:03:31 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.23 2004-07-01 19:13:13 lindes Exp $";
 
 char		strbuf[BUFSIZ],
 		*optstring	= "i:hvmr:c:",
@@ -237,6 +237,8 @@ int main(argc, argv, envp)
 
 	getload(&loadavgs[i]);
 
+	/* TODO: fix minor bug here where we can potentially miss a
+	 * minute marker if sleep() takes too long... */
 	if(((thetimetm->tm_sec) / intsecs) == 0)
 	{
 	    if(!strftime(strbuf, 7, "^%H:%M", thetimetm))
