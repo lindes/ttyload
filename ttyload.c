@@ -1,18 +1,19 @@
 /*
  * ttyload
  *
- * tty equivelant to xload
+ * tty equivalent to xload
  *
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.16 2001-08-24 05:00:02 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.17 2001-08-24 07:25:16 lindes Exp $
  *
  */
 
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <time.h>
@@ -31,7 +32,7 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.16 2001-08-24 05:00:02 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.17 2001-08-24 07:25:16 lindes Exp $";
 
 char		strbuf[BUFSIZ],
 		*optstring	= "i:hv",
@@ -74,8 +75,7 @@ int	rows		= 40,
 	debug		= 3,
 	theclock	= 0,
 
-	height, width/* ,
-	c, i, j, k */;
+	height, width;
 
 
 void	getload(load_list *);
@@ -90,9 +90,8 @@ int main(argc, argv, envp)
     char	*argv[],
 		*envp[];
 {
-    float	multiplier;
     load_list	*loadavgs, newload;
-    int		c, i, j, k, errflag=0, versflag=0;
+    int		c, i, errflag=0, versflag=0;
     char	*basename;
     char	hostname[HOSTLENGTH + 1];
     time_t	thetime;
@@ -158,17 +157,13 @@ int main(argc, argv, envp)
     if(rows < MINROWS)
     {
 	fprintf(stderr, "Sorry, %s requires at least %d rows to run.\n",
-		basename,
-		MINROWS,
-	    NULL);
+		basename, MINROWS);
 	exit(1);
     }
     if(cols < MINCOLS)
     {
 	fprintf(stderr, "Sorry, %s requires at least %d cols to run.\n",
-		basename,
-		MINCOLS,
-	    NULL);
+		basename, MINCOLS);
 	exit(1);
     }
 
@@ -235,7 +230,7 @@ int main(argc, argv, envp)
 		exit(1);
 	    }
 
-	    /* as a temporoary cleanup functionality after
+	    /* as a temporary cleanup functionality after
 	     * changing from clear_screen on every iteration to
 	     * home_screen on all but the first, but since it's
 	     * nice to occasionally actually clear (at least
@@ -262,15 +257,13 @@ int main(argc, argv, envp)
 		(loadavgs[i].five_minute / 1024.),
 		(loadavgs[i].fifteen_minute / 1024.),
 		strbuf + 1,
-		version,
-	    NULL);
+		version);
 
 	if(debug > 3)
 	    printf("Load averages: %f, %f, %f\n",
 		    loadavgs[i].one_minute / 1024.,
 		    loadavgs[i].five_minute / 1024.,
-		    loadavgs[i].fifteen_minute / 1024.,
-		NULL);
+		    loadavgs[i].fifteen_minute / 1024.);
 
 	showloads(loadavgs);
 
@@ -286,6 +279,8 @@ int main(argc, argv, envp)
 	    i--;
 	}
     }
+
+    return(0);	/* not that we get here...  right? */
 }
 
 void	showloads(loadavgs)
@@ -299,16 +294,14 @@ void	showloads(loadavgs)
 
     if(debug>3)
     {
-	printf("Starting with min set: %d, %d, %d\n",
+	printf("Starting with min set: %ld, %ld, %ld\n",
 		min.one_minute,
 		min.five_minute,
-		min.fifteen_minute,
-	    NULL);
-	printf("Starting with first set: %d, %d, %d\n",
+		min.fifteen_minute);
+	printf("Starting with first set: %ld, %ld, %ld\n",
 		loadavgs[0].one_minute,
 		loadavgs[0].five_minute,
-		loadavgs[0].fifteen_minute,
-	    NULL);
+		loadavgs[0].fifteen_minute);
 	sleep(1);
     }
     for(i=0;i<width;i++)
@@ -316,9 +309,8 @@ void	showloads(loadavgs)
 	if(debug>9)
 	{
 	    printf("Checking for min/max at %d...\n", i);
-	    printf("Comparing, for example, %d <=> %d\n",
-		    min.one_minute, loadavgs[i].one_minute,
-		NULL);
+	    printf("Comparing, for example, %ld <=> %ld\n",
+		    min.one_minute, loadavgs[i].one_minute);
 	}
 	min.one_minute	= MIN(min.one_minute, loadavgs[i].one_minute);
 	min.five_minute	= MIN(min.five_minute, loadavgs[i].five_minute);
@@ -331,27 +323,24 @@ void	showloads(loadavgs)
     }
     if(debug>3)
     {
-	printf("Continuing with min set: %d,%d,%d\n",
+	printf("Continuing with min set: %ld,%ld,%ld\n",
 		min.one_minute,
 		min.five_minute,
-		min.fifteen_minute,
-	    NULL);
-	printf("Continuing with first set: %d,%d,%d\n",
+		min.fifteen_minute
+	    );
+	printf("Continuing with first set: %ld,%ld,%ld\n",
 		loadavgs[0].one_minute,
 		loadavgs[0].five_minute,
-		loadavgs[0].fifteen_minute,
-	    NULL);
+		loadavgs[0].fifteen_minute);
 	sleep(1);
 	printf("MIN Load averages: %f, %f, %f\n",
 		min.one_minute / 1024.,
 		min.five_minute / 1024.,
-		min.fifteen_minute / 1024.,
-	    NULL);
+		min.fifteen_minute / 1024.);
 	printf("MAX Load averages: %f, %f, %f\n",
 		max.one_minute / 1024.,
 		max.five_minute / 1024.,
-		max.fifteen_minute / 1024.,
-	    NULL);
+		max.fifteen_minute / 1024.);
     }
     lmin=MIN(min.one_minute, MIN(min.five_minute, min.fifteen_minute));
     lmax=MAX(max.one_minute, MAX(max.five_minute, max.fifteen_minute));
@@ -378,8 +367,8 @@ void	showloads(loadavgs)
 
     if(debug > 3)
     {
-	printf("Boundaries: %d, %d...  ", omin, omax);
-	printf("Long Boundaries: %d, %d\n", lmin, lmax);
+	printf("Boundaries: %g, %g...  ", omin, omax);
+	printf("Long Boundaries: %ld, %ld\n", lmin, lmax);
     }
 
 
@@ -397,13 +386,11 @@ void	showloads(loadavgs)
 	    printf("Load averages: %f, %f, %f  -- ",
 		    loadavgs[i].one_minute / 1024.,
 		    loadavgs[i].five_minute / 1024.,
-		    loadavgs[i].fifteen_minute / 1024.,
-		NULL);
+		    loadavgs[i].fifteen_minute / 1024.);
 	    printf("Heights: %d, %d, %d\n",
 		    loadavgs[i].height1,
 		    loadavgs[i].height5,
-		    loadavgs[i].height15,
-		NULL);
+		    loadavgs[i].height15);
 	}
     }
 
@@ -453,8 +440,7 @@ void	showloads(loadavgs)
 	    loadstrings[3],
 	    loadstrings[5],
 	    loadstrings[6],
-	    loadstrings[7],
-	NULL);
+	    loadstrings[7]);
 }
 
 int	compute_height(thisload, maxload, height)
