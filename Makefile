@@ -18,7 +18,7 @@ VERSION	= -DVERSION='"'`cat Version`'"'
 
 CFLAGS	= $(INCLUDES) $(OTHER_FLAGS) $(DEBUG) $(VERSION)
 
-default:	archbuild
+default:	archbuild loader
 
 test:		archbuild
 	./ttyload -i 1
