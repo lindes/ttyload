@@ -1,0 +1,8 @@
+#!/bin/sh
+
+case `uname -s` in
+    SunOS)	echo "-lkstat";;
+    *)
+	# most stuff doesn't need anything special
+	;;
+esac

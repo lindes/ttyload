@@ -7,6 +7,7 @@
 INSTALLDIR	= /usr/local/bin
 
 ARCH	= `uname -s`
+LDFLAGS	= `./ldflags`
 
 OBJS	= arch/${ARCH}/getload.o arch/default/homebrews.o
 
@@ -42,7 +43,7 @@ ttyload.c:	ttyload.h Version
 
 # have to be explicit here, for some make systems, like .c.o below:
 ttyload: $(OBJS) ttyload.o
-	$(CC) -o $@ $(OBJS) ttyload.o
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) ttyload.o
 
 clean:
 	rm -f *.o $(OBJS) core a.out
