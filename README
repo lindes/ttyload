@@ -39,17 +39,11 @@ things onto new platforms, and generally to do things cleanly.
 But at the same time, the only feature I wanted to add was the
 ability to run it elsewhere, so, as it happens, there is still
 quite a bit of a primitive flavor to this program.  But it did
-manage to get built on Linux, and so now I'm preparing to make
-it available to the world.  Use it wisely (i.e. not in any way
-other than something appropriate for "beta" (or maybe "alpha")
-quality code, and assuming no guarantees whatsoever, etc.)  It
-is expected, also, that it will eventually run on a variety of
-other platforms than just Linux, but for now, despite existing
-files that might indicate otherwise, that's it.  Feel free, if
-you like, to submit patches to change that, though; you do not
-have to wait for me to port it -- I expect that I will, but it
-may not be for a while.  :-)  FWIW, Solaris and IRIX are next.
+manage to get built on Linux, and now even a couple of others,
+so now I'm going ahead and making it available to the world...
 
+Please consider ttyload as "beta" (or maybe even only "alpha")
+quality software, and assume no guarantees whatsoever, thanks.
 
 For info on how to provide whatever feedback, or to get future
 versions as they become available, point your browser towards:
@@ -59,6 +53,25 @@ versions as they become available, point your browser towards:
 Thanks,
 
 	David Lindes
+
+****************
+* PLATFORMS... *
+****************
+
+ttyload has been shown to run on systems running, at least:
+
+- Linux (at least some configs of it -- I'm using a SuSE 6.x box
+  to build it on.)
+- IRIX 6.5 (and possibly other versions?)
+
+Hopefully soon it will also run on:
+
+- Solaris
+- FreeBSD
+
+Feel free, if you like, to submit patches to add more platforms,
+and please let me know also if it runs unmodified on any other
+platforms.
 
 ****************
 * INSTALLATION *
@@ -97,6 +110,7 @@ presumably 'q' and/or '<esc>' will work too.
 ****************
 
 - ttyload -h gives you usage info.
+
 - the 'loader' program is generally something you don't want to run.
   In case you're curious, it's a "load bomb" which is specifically
   designed to increase your load average, but in a relatively limited
@@ -104,14 +118,17 @@ presumably 'q' and/or '<esc>' will work too.
   be easier, and I don't expect folks to run it normally, but I figured
   I'd provide it anyway, just in case you're having a "Spinal Tap"
   moment or something.  ;-)
+
 - there's a todo list on the web page, if you're thinking of a feature
   you want to see added, check there first before requesting it.
+
 - Please see the LICENSE file for information on what you're allowed to
   do with ttyload, etc.  It's not under the GPL or some other license
   because I'm not entirely happy with most of those licenses.  I
   eventually hope to put it under the GratuityWare Public License
   (GWPL, see http://www.gratuityware.org/), but that doesn't exist yet,
   because I haven't written it yet, so, that's yet to come.
+
 - Despite the lack of existence as yet of the GWPL, I do consider
   ttyload to be GratuityWare.  This means that there will never be a
   required fee for using it, but donations are encouraged.  See the web
@@ -119,6 +136,7 @@ presumably 'q' and/or '<esc>' will work too.
   that will allow you to do that.  Or send me e-mail if you don't want
   to use the available method(s), but do want to contribute, and we can
   work something out.
+
 - Send any other feedback (comments, requests, bug reports, etc.) to me
   at <src/ttyload@daveltd.com> (yes, '/' is valid in an e-mail address!
   If your mailer can't hack it, though, you can substitute '-' for it,
