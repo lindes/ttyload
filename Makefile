@@ -56,12 +56,7 @@ clobber:	clean
 
 # install, gently.  not much to it:
 install:	archbuild
-	/bin/cp ttyload ${INSTALLDIR}/ttyload
-	if [ ${ARCH} = IRIX ];				\
-	then						\
-		/bin/chgrp sys ${INSTALLDIR}/ttyload;	\
-		/bin/chmod g+s ${INSTALLDIR}/ttyload;	\
-	fi
+	/bin/cp -i ttyload ${INSTALLDIR}/ttyload
 
 # because different systems' make have different behaviors on how they
 # deal with building stuff in subdirectories, and because I don't feel

@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.14 2001-08-24 03:48:58 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.15 2001-08-24 04:48:15 lindes Exp $
  *
  */
 
@@ -30,7 +30,7 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.14 2001-08-24 03:48:58 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.15 2001-08-24 04:48:15 lindes Exp $";
 
 char		strbuf[BUFSIZ],
 		*optstring	= "i:hv",
@@ -187,8 +187,8 @@ int main(argc, argv, envp)
     }
 
     /* run getload one time before clear_screen, in case it
-     * errors (as it will on IRIX if the program doesn't have
-     * read access to /dev/kmem, for example). */
+     * errors out or something... not that I've seen it do that,
+     * but there's code there for checking stuff. */
     getload(&loadavgs[0]);
 
     for(i=0;i<clocks;i++)
