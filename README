@@ -65,9 +65,7 @@ ttyload has been shown to run on systems running, at least:
 - IRIX 6.5 (and possibly other versions?)
 - FreeBSD (some version or other, I'm not familiar with their
   numbering system...  4.4, I think.)
-- Solaris 8 (I haven't tested this recently, as I don't have
-  access to a Solaris 8 machine, but I saw it work in the past,
-  and I'm told it still does)
+- Solaris 2.x and later (at least 2.6 and 8)
 
 Feel free, if you like, to submit patches to add more platforms
 (or other versions of existing platforms), and please let me
