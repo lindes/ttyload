@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.10 2001-02-27 03:23:22 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.11 2001-02-27 03:52:51 lindes Exp $
  *
  */
 
@@ -33,7 +33,7 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.10 2001-02-27 03:23:22 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.11 2001-02-27 03:52:51 lindes Exp $";
 
 char		*kmemfile	= "/dev/kmem",
 		strbuf[BUFSIZ],
@@ -235,6 +235,17 @@ int main(argc, argv, envp)
 		fprintf(stderr, "Internal error: too many clocks!");
 		exit(1);
 	    }
+
+	    /* as a temporoary cleanup functionality after
+	     * changing from clear_screen on every iteration to
+	     * home_screen on all but the first, but since it's
+	     * nice to occasionally actually clear (at least
+	     * until we're actually using curses or the like,
+	     * when we can put that activity on SIGWINCH and
+	     * ctrl-L command, or the like), I'm using the
+	     * enclosing if() condition as a "good" time to do
+	     * that: */
+	    clear_screen();
 	}
 
 	if(!ascftime(strbuf, "%T", thetimetm))
@@ -430,6 +441,9 @@ void	showloads(loadavgs)
 		NULL);
 	}
     }
+
+    /* make sure the string still terminates in the same place: */
+    strbuf[cols -1]	= '\0';
 
     printf("%s\n  Legend:\n"
 	   "     1 min: %s, 5 min: %s, 15 min: %s\n"
