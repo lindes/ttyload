@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.15 2001-08-24 04:48:15 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.16 2001-08-24 05:00:02 lindes Exp $
  *
  */
 
@@ -25,12 +25,13 @@
 #define	HEIGHTPAD	9
 #define	WIDTHPAD	14
 #define	CLOCKWIDTH	7
-#define	HOSTLENGTH	20
+#define	HOSTLENGTH	30
+#define MINHOSTPAD	20
 
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.15 2001-08-24 04:48:15 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.16 2001-08-24 05:00:02 lindes Exp $";
 
 char		strbuf[BUFSIZ],
 		*optstring	= "i:hv",
@@ -138,8 +139,8 @@ int main(argc, argv, envp)
 	sleep(2);
     }
 
-    /* do space-padding of hostname out to HOSTLENGTH chars: */
-    for(i = 0; i < (HOSTLENGTH); i++)
+    /* do space-padding of hostname out to MINHOSTPAD chars: */
+    for(i = 0; i < (MINHOSTPAD); i++)
     {
     	if(hostname[i] == '\0')
 	{
