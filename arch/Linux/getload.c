@@ -31,6 +31,12 @@ void	getload(load_list *loadavgs)
 
     ret = fscanf(loadfile, "%f %f %f ", &(theload[0]), &(theload[1]), &(theload[2]));
 
+    if(fclose(loadfile) != 0)
+    {
+    	perror("Close of " LOADFILE " failed?!");
+	exit(1);
+    }
+
     /* so the caller _can_ (maybe not _will_) know how we did */
     loadavgs->numloads	= ret;
     loadavgs->one_minute	= theload[0] * 1024;
