@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.18 2001-08-25 03:18:26 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.19 2001-08-25 05:07:41 lindes Exp $
  *
  */
 
@@ -32,7 +32,7 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.18 2001-08-25 03:18:26 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.19 2001-08-25 05:07:41 lindes Exp $";
 
 char		strbuf[BUFSIZ],
 		*optstring	= "i:hvmr:c:",
@@ -174,12 +174,6 @@ int main(argc, argv, envp)
 	}
     }
 
-    intsecs	= MAX(1, intsecs);	/* must be positive */
-    height	= rows - HEIGHTPAD;
-    width	= cols - WIDTHPAD;
-    clocks	= MAX(width/intsecs, width/CLOCKWIDTH);
-    clockpad	= (width / clocks) - CLOCKWIDTH;
-
     if(rows < MINROWS)
     {
 	fprintf(stderr, "Sorry, %s requires at least %d rows to run.\n",
@@ -192,6 +186,12 @@ int main(argc, argv, envp)
 		basename, MINCOLS);
 	exit(1);
     }
+
+    intsecs	= MAX(1, intsecs);	/* must be positive */
+    height	= rows - HEIGHTPAD;
+    width	= cols - WIDTHPAD;
+    clocks	= MAX(width/intsecs, width/CLOCKWIDTH);
+    clockpad	= (width / clocks) - CLOCKWIDTH;
 
     loadavgs	= (load_list *)calloc(width, sizeof(load_list));
     theclocks	= (clock_info *)calloc(clocks, sizeof(clock_info));
