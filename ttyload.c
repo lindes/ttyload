@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.9 2001-02-24 10:57:53 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.10 2001-02-27 03:23:22 lindes Exp $
  *
  */
 
@@ -33,7 +33,7 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.9 2001-02-24 10:57:53 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.10 2001-02-27 03:23:22 lindes Exp $";
 
 char		*kmemfile	= "/dev/kmem",
 		strbuf[BUFSIZ],
@@ -81,6 +81,7 @@ void	getload(load_list *);
 int	compute_height(load_t, load_t, int);
 void	showloads(load_list *);
 void	clear_screen();
+void	home_screen();
 void	cycle_load_list(load_list*, load_list, int);
 
 int main(argc, argv, envp)
@@ -197,6 +198,8 @@ int main(argc, argv, envp)
     }
 #endif	/* 0 */
 
+    clear_screen();
+
     for(i=0;i<width;i++)
     {
 	if(i != 0)
@@ -241,7 +244,7 @@ int main(argc, argv, envp)
 	    exit(1);
 	}
 
-	clear_screen();
+	home_screen();
 
 	printf("%s   %.2f, %.2f, %.2f   %s       ttyload, v%s\n\n",
 		hostname,
@@ -472,6 +475,11 @@ int	compute_height(thisload, maxload, height)
 void	clear_screen()
 {
     printf("\033[H\033[2J");
+}
+
+void	home_screen()
+{
+    printf("\033[H");
 }
 
 void	cycle_load_list(loadavgs, newload, width)
