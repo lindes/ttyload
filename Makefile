@@ -11,7 +11,7 @@ ARCH	= `uname -s`
 OBJS	= arch/${ARCH}/getload.o arch/default/homebrews.o
 
 # this is what I use most places...
-CC=gcc
+CC=gcc -pedantic -Wall
 
 # for the things in the sub-directory:
 INCLUDES	=	-I$${PWD:-.} \
@@ -49,7 +49,7 @@ ttyload: $(OBJS) ttyload.o
 	$(CC) -o $@ $(OBJS) ttyload.o
 
 clean:
-	rm -f *.o $(OBJS)
+	rm -f *.o $(OBJS) core a.out
 
 clobber:	clean
 	rm -f loader ttyload
