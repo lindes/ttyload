@@ -1,0 +1,40 @@
+Here's an example of what a platform-specific getload.c might look like,
+in skeleton form:
+
+/* to get data types and such: */
+#include "ttyload.h"
+
+/* general headers that are likely to be used on most systems: */
+#include <stdio.h>		/* for perror */
+#include <stdlib.h>		/* for exit() */
+
+/* and here's the core function: */
+void	getload(load_list *loadavgs)
+{
+    /* to store data from the load average retrieval routine: */
+    sometype	theload[3];
+    /* to store the return value of same: */
+    int		ret;
+
+    if((ret = someroutineforgettingload(theload)) < 0)
+    {
+    	perror("thatroutineIcalled() failed");
+	exit(1);
+    }
+
+    /* so the caller can know how we did with getting the load, and
+     * report on problems there: */
+    loadavgs->numloads	= ret;
+
+    /* and these all should be in integer form as one 1024'th of the
+     * actual load average...  On most platforms, you'll probably have
+     * to do this math (but some may not require it, depending on how
+     * the routine for getting the load average actually works): */
+    loadavgs->one_minute	= theload[0] * 1024;
+    loadavgs->five_minute	= theload[1] * 1024;
+    loadavgs->fifteen_minute	= theload[2] * 1024;
+
+    /* no need to "return()" anything, because we exit() on fatal
+     * errors, and return information about our success level beyond
+     * that with numloads. */
+}
