@@ -18,10 +18,6 @@ INCLUDES	=	-I$${PWD:-.} \
 			-I$${PWD:-.}/arch/${ARCH} \
 			-I$${PWD:-.}/arch/default
 
-# Hopefully you don't need this... on Solaris (SunOS), though,
-# you probably do.  Uncomment it if things don't build:
-# OTHER_FLAGS	= -DNEED_LOCAL_HEADERS
-
 # Debugging compiles?
 DEBUG	= -g
 

@@ -4,11 +4,7 @@
 #include <stdlib.h>		/* for exit() */
 #include <unistd.h>		/* for sleep() */
 
-#ifdef NEED_LOCAL_HEADERS
-#include "loadavg.h"
-#else	/* don't NEED_LOCAL_HEADERS */
 #include <sys/loadavg.h>	/* for getloadavg() */
-#endif	/* (don't) NEED_LOCAL_HEADERS */
 
 void	getload(load_list *loadavgs)
 {
