@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.5 2000-05-20 01:31:30 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.6 2000-08-16 22:02:31 lindes Exp $
  *
  */
 
@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
+#include <time.h>
 #if 0
 #include <sys/sysmp.h>
 #endif
@@ -31,7 +32,7 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.5 2000-05-20 01:31:30 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.6 2000-08-16 22:02:31 lindes Exp $";
 
 char		*kmemfile	= "/dev/kmem",
 		strbuf[BUFSIZ],
