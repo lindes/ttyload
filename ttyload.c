@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.13 2001-08-24 01:57:03 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.14 2001-08-24 03:48:58 lindes Exp $
  *
  */
 
@@ -16,9 +16,6 @@
 #include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <time.h>
-#if 0
-#include <sys/sysmp.h>
-#endif
 #include <sys/types.h>
 #include <unistd.h>
 #include <time.h>
@@ -33,10 +30,9 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.13 2001-08-24 01:57:03 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.14 2001-08-24 03:48:58 lindes Exp $";
 
-char		*kmemfile	= "/dev/kmem",
-		strbuf[BUFSIZ],
+char		strbuf[BUFSIZ],
 		*optstring	= "i:hv",
 		*usage	=
 		    "Usage: %s [-i secs]\n"
@@ -50,7 +46,7 @@ char		*kmemfile	= "/dev/kmem",
 		    "  (Note: use ctrl-C to quit)\n\n"
 		    "  For updates and other info, see http://"
 		    	"www.daveltd.com/src/util/ttyload/\n";
-int		kmemfd, clockpad, clocks;
+int		clockpad, clocks;
 clock_info	*theclocks;
 
 /* version ID, passed in by the Makefile: */
@@ -81,7 +77,6 @@ int	rows		= 40,
 	c, i, j, k */;
 
 
-// void	getload(long, long, load_list *);
 void	getload(load_list *);
 int	compute_height(load_t, load_t, int);
 void	showloads(load_list *);
@@ -95,7 +90,6 @@ int main(argc, argv, envp)
 		*envp[];
 {
     float	multiplier;
-    load_t	loadaddr;
     load_list	*loadavgs, newload;
     int		c, i, j, k, errflag=0, versflag=0;
     char	*basename;
@@ -192,28 +186,15 @@ int main(argc, argv, envp)
 	exit(1);
     }
 
+    /* run getload one time before clear_screen, in case it
+     * errors (as it will on IRIX if the program doesn't have
+     * read access to /dev/kmem, for example). */
+    getload(&loadavgs[0]);
+
     for(i=0;i<clocks;i++)
     {
 	theclocks[i].pos	= -1;
     }
-
-#if 0	/* need to pull this */
-    loadaddr	= sysmp(MP_KERNADDR, MPKA_AVENRUN);
-
-    if(loadaddr == -1)
-    {
-	perror("Couldn't determine load address");
-	exit(1);
-    }
-
-    kmemfd	= open(kmemfile, O_RDONLY);
-
-    if(kmemfd < 0)
-    {
-	perror("Couldn't open memory file");
-	exit(1);
-    }
-#endif	/* 0 */
 
     clear_screen();
 
@@ -454,8 +435,7 @@ void	showloads(loadavgs)
 	    strncpy(
 		    &strbuf[9+theclocks[i].pos],
 		    theclocks[i].clock,
-		    6,
-		NULL);
+		    6);
 	}
     }
 
@@ -475,25 +455,6 @@ void	showloads(loadavgs)
 	    loadstrings[7],
 	NULL);
 }
-
-#if 0	/* being phased out... ugliness. */
-void	getload(kmemfd, loadaddr, loadavgs)
-    long	kmemfd, loadaddr;
-    load_list	*loadavgs;
-{
-    if((lseek(kmemfd, loadaddr, SEEK_SET)) != loadaddr)
-    {
-	perror("Couldn't seek to load address");
-	exit(1);
-    }
-
-    if((read(kmemfd, loadavgs, 3*sizeof(load_t))) != 3*sizeof(load_t))
-    {
-	perror("Couldn't read load data");
-	exit(1);
-    }
-}
-#endif
 
 int	compute_height(thisload, maxload, height)
     load_t	thisload,
