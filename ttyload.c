@@ -1,3 +1,17 @@
+/*
+ * ttyload
+ *
+ * tty equivelant to xload
+ *
+ * Copyright 1996 by David Lindes
+ * all right reserved.
+ *
+ * Version information: $Id: ttyload.c,v 1.2 1996-06-16 02:49:29 lindes Exp $
+ *
+ */
+
+#ident "$Id: ttyload.c,v 1.2 1996-06-16 02:49:29 lindes Exp $"
+
 #include <limits.h>
 #include <stdio.h>
 #include <sys/fcntl.h>
@@ -6,61 +20,34 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define	MIN(a,b)	((a)<(b)?(a):(b))
-#define	MAX(a,b)	((a)>(b)?(a):(b))
-
-#define	ONE	01;
-#define	FIVE	02;
-#define	FIFTEEN	04;
-
-char *loadstrings[] = { " ", "+", "x", "*", ".", "=", "X", "@" };
-
-typedef	long	load_t;
-
-typedef struct load_list {
-	load_t	one_minute;
-	load_t	five_minute;
-	load_t	fifteen_minute;
-	int	height1;
-	int	height5;
-	int	height15;
-    } load_list;
-
-/* The following variables should probably be assigned using
-   some sort of real logic, rather than these hard-coded
-   defaults, but the defaults work for now... */
-int	rows	= 40,
-	cols	= 80,
-	height	= 35,
-	width	= 70,
-	intsec	= 1,
-	i,j,k;
-
+#include "ttyload.h"
 
 char	*kmemfile	= "/dev/kmem";
+int	kmemfd;
 
 void	getload(long,long,load_list *);
 int	compute_height(load_t,load_t,int);
+void	showloads(load_list *);
+void	clear_screen();
+void	cycle_load_list(load_list*,load_list,int);
+
+int	debug=3;
 
 int main(argc,argv,envp)
     int		argc;
     char	*argv[],
 		*envp[];
 {
-    int		kmemfd,
-		omin,omax,
-		lmin,lmax;
     float	multiplier;
     load_t	loadaddr;
-    load_list	min	= {LONG_MAX,LONG_MAX,LONG_MAX},
-		max	= {0,0,0},
-		*loadavgs;
+    load_list	*loadavgs, newload;
+    int		i,j,k;
 
     loadavgs	= (load_list *)calloc(width,sizeof(load_list));
 
     if(!loadavgs)
     {
-	perror("malloc for loadavgs failed");
+	perror("calloc for loadavgs failed");
     }
 
     loadaddr	= sysmp(MP_KERNADDR,MPKA_AVENRUN);
@@ -88,16 +75,61 @@ int main(argc,argv,envp)
 
 	getload(kmemfd,loadaddr,&loadavgs[i]);
 
-	/*
-	printf("Load averages: %f, %f, %f\n",
-		loadavgs[i].one_minute / 1024.,
-		loadavgs[i].five_minute / 1024.,
-		loadavgs[i].fifteen_minute / 1024.,
+	if(debug > 3)
+	    printf("Load averages: %f, %f, %f\n",
+		    loadavgs[i].one_minute / 1024.,
+		    loadavgs[i].five_minute / 1024.,
+		    loadavgs[i].fifteen_minute / 1024.,
+		NULL);
+
+	showloads(loadavgs);
+
+	if(i == (width - 1))
+	{
+	    if(debug > 4)
+	    {
+		printf("CYCLING LOAD LIST...\n");
+		sleep(3);
+	    }
+	    getload(kmemfd,loadaddr,&newload);
+	    cycle_load_list(loadavgs,newload,width);
+	    i--;
+	}
+    }
+}
+
+void	showloads(loadavgs)
+    load_list	*loadavgs;
+{
+    load_list	min	= {LONG_MAX-1,LONG_MAX-1,LONG_MAX-1,0,0,0},
+		max	= {0,0,0,0,0,0};
+    load_t	omin,omax,
+		lmin,lmax;
+    int		i,j,k;
+
+    if(debug>3)
+    {
+	printf("Starting with min set: %d,%d,%d\n",
+		min.one_minute,
+		min.five_minute,
+		min.fifteen_minute,
 	    NULL);
-	*/
+	printf("Starting with first set: %d,%d,%d\n",
+		loadavgs[0].one_minute,
+		loadavgs[0].five_minute,
+		loadavgs[0].fifteen_minute,
+	    NULL);
+	sleep(1);
     }
     for(i=0;i<width;i++)
     {
+	if(debug>9)
+	{
+	    printf("Checking for min/max at %d...\n",i);
+	    printf("Comparing, for example, %d <=> %d\n",
+		    min.one_minute,loadavgs[i].one_minute,
+		NULL);
+	}
 	min.one_minute	= MIN(min.one_minute,loadavgs[i].one_minute);
 	min.five_minute	= MIN(min.five_minute,loadavgs[i].five_minute);
 	min.fifteen_minute
@@ -106,6 +138,20 @@ int main(argc,argv,envp)
 	max.five_minute	= MAX(max.five_minute,loadavgs[i].five_minute);
 	max.fifteen_minute
 		= MAX(max.fifteen_minute,loadavgs[i].fifteen_minute);
+    }
+    if(debug>3)
+    {
+	printf("Continuing with min set: %d,%d,%d\n",
+		min.one_minute,
+		min.five_minute,
+		min.fifteen_minute,
+	    NULL);
+	printf("Continuing with first set: %d,%d,%d\n",
+		loadavgs[0].one_minute,
+		loadavgs[0].five_minute,
+		loadavgs[0].fifteen_minute,
+	    NULL);
+	sleep(1);
     }
     printf("MIN Load averages: %f, %f, %f\n",
 	    min.one_minute / 1024.,
@@ -120,7 +166,8 @@ int main(argc,argv,envp)
     lmin=MIN(min.one_minute,MIN(min.five_minute,min.fifteen_minute));
     lmax=MAX(max.one_minute,MAX(max.five_minute,max.fifteen_minute));
 
-    printf("Overall MIN, MAX: %f, %f\n",lmin/1024.,lmax/1024.);
+    if(debug > 3)
+	printf("Overall MIN, MAX: %f, %f\n",lmin/1024.,lmax/1024.);
 
     omin	= lmin / 1024;
     omax	= (lmax / 1024) + 1;
@@ -128,30 +175,41 @@ int main(argc,argv,envp)
     lmin	= 1024 * omin;
     lmax	= 1024 * omax;
 
-    printf("Boundaries: %d, %d\n",omin,omax);
-    printf("Long Boundaries: %d, %d\n",lmin,lmax);
+    if(debug > 3)
+    {
+	printf("Boundaries: %d, %d...  ",omin,omax);
+	printf("Long Boundaries: %d, %d\n",lmin,lmax);
+    }
 
 
     for(i=0;i<width;i++)
     {
-	printf("Load averages: %f, %f, %f  -- ",
-		loadavgs[i].one_minute / 1024.,
-		loadavgs[i].five_minute / 1024.,
-		loadavgs[i].fifteen_minute / 1024.,
-	    NULL);
-	printf("Heights: %d, %d, %d\n",
-		loadavgs[i].height1 =
-		compute_height(loadavgs[i].one_minute,lmax,height),
-		loadavgs[i].height5 =
-		compute_height(loadavgs[i].five_minute,lmax,height),
-		loadavgs[i].height15 =
-		compute_height(loadavgs[i].fifteen_minute,lmax,height),
-	    NULL);
+	loadavgs[i].height1 =
+	compute_height(loadavgs[i].one_minute,lmax,height);
+	loadavgs[i].height5 =
+	compute_height(loadavgs[i].five_minute,lmax,height);
+	loadavgs[i].height15 =
+	compute_height(loadavgs[i].fifteen_minute,lmax,height);
+
+	if(debug > 3)
+	{
+	    printf("Load averages: %f, %f, %f  -- ",
+		    loadavgs[i].one_minute / 1024.,
+		    loadavgs[i].five_minute / 1024.,
+		    loadavgs[i].fifteen_minute / 1024.,
+		NULL);
+	    printf("Heights: %d, %d, %d\n",
+		    loadavgs[i].height1,
+		    loadavgs[i].height5,
+		    loadavgs[i].height15,
+		NULL);
+	}
     }
 
+    clear_screen();
     for(j=0;j<height;j++)
     {
-	printf("%6.2f ",
+	printf("%6.2f   ",
 		( ( ((float)omax) * (height-j)) / (height))
 	    );
 	for(i=0;i<width;i++)
@@ -167,6 +225,18 @@ int main(argc,argv,envp)
 	}
 	printf("\n");
     }
+
+    printf("\n  Key:\n");
+    printf(" 1 min: %s, 5 min: %s, 15 min: %s\n"
+	   " 1&5 same: %s, 1&15: %s, 5&15: %s, all: %s\n",
+	    loadstrings[1],
+	    loadstrings[2],
+	    loadstrings[4],
+	    loadstrings[3],
+	    loadstrings[5],
+	    loadstrings[6],
+	    loadstrings[7],
+	NULL);
 }
 
 void	getload(kmemfd,loadaddr,loadavgs)
@@ -192,4 +262,26 @@ int	compute_height(thisload,maxload,height)
     int		height;
 {
     return(/*height-*/(height*((maxload-thisload)/(float)maxload)));
+}
+
+void	clear_screen()
+{
+    printf("\033[H\033[2J");
+}
+
+void	cycle_load_list(loadavgs,newload,width)
+    load_list	*loadavgs,
+		newload;
+    int		width;
+{
+    /* This function will eventually have code to
+       clear locations on the screen that change. */
+
+    int i;
+
+    for(i=0;i<(width-1);i++)
+    {
+	loadavgs[i]	= loadavgs[i+1];
+    }
+    loadavgs[i]	= newload;
 }
