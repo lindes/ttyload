@@ -1,12 +1,12 @@
 ARCH	= `uname -s`
 
-OBJS	= arch/$(ARCH)/getload.o
+OBJS	= arch/${ARCH}/getload.o arch/default/homebrews.o
 
 # this is what I use most places...
 CC=gcc
 
 # for the things in the sub-directory:
-INCLUDES	= -I${PWD}
+INCLUDES	= -I${PWD} -I ${PWD}/arch/${ARCH} -I${PWD}/arch/default
 
 # Hopefully you don't need this:
 OTHER_FLAGS	= -DNEED_LOCAL_HEADERS
@@ -14,12 +14,20 @@ OTHER_FLAGS	= -DNEED_LOCAL_HEADERS
 # Debugging compiles?
 DEBUG	= -g
 
-CFLAGS	= $(INCLUDES) $(OTHER_FLAGS) $(DEBUG)
+VERSION	= -DVERSION='"'`cat Version`'"'
 
-default:
+CFLAGS	= $(INCLUDES) $(OTHER_FLAGS) $(DEBUG) $(VERSION)
+
+default:	archbuild
+
+test:		archbuild
+	./ttyload
+
+archbuild:
 	make ttyload ARCH=`uname -s`
 
-ttyload.c:	ttyload.h
+ttyload.c:	ttyload.h Version
+	touch ttyload.c
 
 ttyload: $(OBJS) ttyload.o
 
