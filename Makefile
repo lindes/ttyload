@@ -29,7 +29,9 @@ VERSION	= -DVERSION='"'`cat Version`'"'
 
 CFLAGS	= $(INCLUDES) $(OTHER_FLAGS) $(DEBUG) $(VERSION)
 
-PROGRAMS =	archbuild loader
+# most people won't want loader, so don't bother building it:
+# PROGRAMS =	archbuild loader
+PROGRAMS =	archbuild
 
 default:	$(PROGRAMS)
 
@@ -48,7 +50,7 @@ clean:
 	rm -f *.o $(OBJS)
 
 clobber:	clean
-	rm -f $(PROGRAMS)
+	rm -f loader ttyload
 
 # install, gently.  not much to it:
 install:	archbuild
