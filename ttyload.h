@@ -8,7 +8,7 @@
  *
  */
 
-#ident "$Id: ttyload.h,v 1.1 1996-06-16 02:49:29 lindes Exp $"
+char *h="$Id: ttyload.h,v 1.2 1996-06-16 02:53:51 lindes Exp $";
 
 #define	MIN(a,b)	(((a)<(b))?(a):(b))
 #define	MAX(a,b)	(((a)>(b))?(a):(b))

@@ -6,11 +6,9 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.2 1996-06-16 02:49:29 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.3 1996-06-16 02:53:30 lindes Exp $
  *
  */
-
-#ident "$Id: ttyload.c,v 1.2 1996-06-16 02:49:29 lindes Exp $"
 
 #include <limits.h>
 #include <stdio.h>
@@ -21,6 +19,8 @@
 #include <unistd.h>
 
 #include "ttyload.h"
+
+char *c="$Id: ttyload.c,v 1.3 1996-06-16 02:53:30 lindes Exp $";
 
 char	*kmemfile	= "/dev/kmem";
 int	kmemfd;
