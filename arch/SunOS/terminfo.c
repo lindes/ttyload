@@ -5,7 +5,6 @@
  * Copyright 2001, David Lindes.  All rights reserved.
  */
 
-
 #include <unistd.h>		/* for ioctl() */
 #include <termios.h>		/* for TIOCGWINSZ */
 #define _KMEMUSER		/* something needs this in order
