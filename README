@@ -1,3 +1,7 @@
+****************
+* INTRODUCTION *
+****************
+
 Hi there,
 
 This is ttyload.  It was originally inspired several years ago
@@ -55,3 +59,67 @@ versions as they become available, point your browser towards:
 Thanks,
 
 	David Lindes
+
+****************
+* INSTALLATION *
+****************
+
+to build ttyload, in theory all you need to is type 'make'.  If
+you want to also install it, 'make install' should do the trick,
+which will gently (i.e. with cp -i) copy it to /usr/local/bin
+(or another directory if you edit the INSTALLDIR setting in the
+Makefile or do 'make install INSTALLDIR=whatever').
+
+****************
+* RUN-TIME FOO *
+****************
+
+After building, you can run ttyload with './ttyload' (or just
+'ttyload' if either '.' is in your $PATH, or you did the make
+install into a directory that is), which will start up ttyload.
+What you see is basically a screen with three graphs on it.  One
+is for the 1-minute load average, one for the 5min, and one for
+the 15min.  Assuming you have color support, these will be red,
+green, and blue, respectively, and if they overlap, RGB addition
+will be done on them...  Red + Green == Yellow, etc.  See the
+Legend in the lower-left hand corner for the cheat-sheet.
+(Note: all my color naming is assuming your terminal is
+"reasonably standard" -- and no, I don't know exactly what
+"reasonably standard" means, so don't ask.  ;-)
+
+To exit, type <ctrl-C> (hold down the "control" or "ctrl" key,
+and then simultaneously press the "c" key), or whatever you have
+'stty intr' set to.  If and when I have a curses mode,
+presumably 'q' and/or '<esc>' will work too.
+
+****************
+* OTHER THINGS *
+****************
+
+- ttyload -h gives you usage info.
+- the 'loader' program is generally something you don't want to run.
+  In case you're curious, it's a "load bomb" which is specifically
+  designed to increase your load average, but in a relatively limited
+  way.  This was done so that testing and screen shots and whatnot would
+  be easier, and I don't expect folks to run it normally, but I figured
+  I'd provide it anyway, just in case you're having a "Spinal Tap"
+  moment or something.  ;-)
+- there's a todo list on the web page, if you're thinking of a feature
+  you want to see added, check there first before requesting it.
+- Please see the LICENSE file for information on what you're allowed to
+  do with ttyload, etc.  It's not under the GPL or some other license
+  because I'm not entirely happy with most of those licenses.  I
+  eventually hope to put it under the GratuityWare Public License
+  (GWPL, see http://www.gratuityware.org/), but that doesn't exist yet,
+  because I haven't written it yet, so, that's yet to come.
+- Despite the lack of existence as yet of the GWPL, I do consider
+  ttyload to be GratuityWare.  This means that there will never be a
+  required fee for using it, but donations are encouraged.  See the web
+  site (listed above at the end of the INTRODUCTION section) for a link
+  that will allow you to do that.  Or send me e-mail if you don't want
+  to use the available method(s), but do want to contribute, and we can
+  work something out.
+- Send any other feedback (comments, requests, bug reports, etc.) to me
+  at <src/ttyload@daveltd.com> (yes, '/' is valid in an e-mail address!
+  If your mailer can't hack it, though, you can substitute '-' for it,
+  if you must).
