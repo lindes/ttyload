@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.21 2001-08-28 01:00:31 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.22 2001-08-28 01:03:31 lindes Exp $
  *
  */
 
@@ -33,7 +33,7 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.21 2001-08-28 01:00:31 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.22 2001-08-28 01:03:31 lindes Exp $";
 
 char		strbuf[BUFSIZ],
 		*optstring	= "i:hvmr:c:",
@@ -190,7 +190,7 @@ int main(argc, argv, envp)
     }
 
     intsecs	= MAX(1, intsecs);	/* must be positive */
-    height	= rows - HEIGHTPAD;
+    height	= rows - HEIGHTPAD - 1;
     width	= cols - WIDTHPAD;
     clocks	= MAX(width/intsecs, width/CLOCKWIDTH);
     clockpad	= (width / clocks) - CLOCKWIDTH;
