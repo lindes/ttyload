@@ -25,7 +25,7 @@ And I know of no other utilities that perform quite this task.
 
 For a while, I only needed it on one platform, and so I simply
 recompiled it from time to time as I moved from one machine to
-another.  But eventually I stopped having such a heterogeneous
+another.  But, eventually, I stopped having such a homogeneous
 environment, and wanted it for other platforms.  But different
 platforms required different methods of getting data about the
 load averages...  For a while, I didn't feel quite enough of a
