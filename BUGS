@@ -1,0 +1,13 @@
+This code is still in relative infancy, despite the
+chronological age of some of it...  As such, I suspect the
+potential is pretty high that there are a number of bugs in it.
+There are also a number of features which I'd like to be in it,
+but which currently are not...  I suppose I could call those
+bugs too, maybe, but instead I'll reference them in a different
+list, presented in the file named TODO.  And currently, while
+I've got plenty of things I want to see changed, there's not
+much that I can really call a "bug", per se...  But here's
+something that's at least borderline on being one:
+
+-	actually detect, rather than hard-coding, the number of
+	rows and columns on the tty this is being run on.

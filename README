@@ -1,0 +1,57 @@
+Hi there,
+
+This is ttyload.  It was originally inspired several years ago
+when I (David Lindes, the original author) found myself with a
+desire to track load averages over time on a UNIX(ish) machine
+that I didn't have a way to run xload on (or any X application
+actually -- it didn't have the libraries installed, and it was
+not a reasonable choice to change that for that machine)...  I
+figured this concept might come in handy in a variety of other
+situations, such as when logged in on a non-graphical console,
+or logging in remotely without an ability to forward X, etc...
+
+So, I wrote it.  Now, when I originally wrote it, I was pretty
+inexperienced, so, while I new about curses, and that it would
+be nice to have this utility written with it, I didn't feel up
+to figuring it out and making that go, so I just used the fact
+that I happened to know a few ANSI escape sequences, and faked
+it as best I could at that time.  Since then, I've found that,
+indeed, this functionality does have times when it's useful...
+And I know of no other utilities that perform quite this task.
+
+For a while, I only needed it on one platform, and so I simply
+recompiled it from time to time as I moved from one machine to
+another.  But eventually I stopped having such a heterogeneous
+environment, and wanted it for other platforms.  But different
+platforms required different methods of getting data about the
+load averages...  For a while, I didn't feel quite enough of a
+desire to have it elsewhere to make it work.  But eventually I
+was convinced, through both my own desire and some urging from
+my friend Vern, to dust off the code and make it work again...
+
+So that's what I did.  In doing so, I tried to make any purely
+new code be written in ways that would allow easy expansion of
+things onto new platforms, and generally to do things cleanly.
+But at the same time, the only feature I wanted to add was the
+ability to run it elsewhere, so, as it happens, there is still
+quite a bit of a primitive flavor to this program.  But it did
+manage to get built on Linux, and so now I'm preparing to make
+it available to the world.  Use it wisely (i.e. not in any way
+other than something appropriate for "beta" (or maybe "alpha")
+quality code, and assuming no guarantees whatsoever, etc.)  It
+is expected, also, that it will eventually run on a variety of
+other platforms than just Linux, but for now, despite existing
+files that might indicate otherwise, that's it.  Feel free, if
+you like, to submit patches to change that, though; you do not
+have to wait for me to port it -- I expect that I will, but it
+may not be for a while.  :-)  FWIW, Solaris and IRIX are next.
+
+
+For info on how to provide whatever feedback, or to get future
+versions as they become available, point your browser towards:
+
+	http://www.daveltd.com/src/util/ttyload/
+
+Thanks,
+
+	David Lindes
