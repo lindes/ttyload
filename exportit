@@ -1,18 +1,50 @@
 #!/bin/sh
 
-# exportit -- a simple little script to export something and
-# make a tarbal of it, in mostly automated fasion.  Could do
-# more error checking, but if things are happy, it works.  :-)
+# exportit -- a simple little script to export something from a
+# CVS repository and create a "release" tarbal of it, in mostly
+# automated fasion.  Could probably stand do more error
+# checking, but if things are happy, it works.  :-)  Note that
+# people getting this with ttyload will have no reason to use it
+# in conjunction with ttyload.
 
-# name you wanna call this...  Perhaps this should be `basename
-# $path`, but whatever:
-name=ttyload
+# Copyright 2001 by David Lindes, All Rights Reserved.
+# Distributed under the license described in the file LICENSE
+# that comes with ttyload.
+
+# if you're wanting to use this script for some other project,
+# and you want to call your release something other than the
+# name of the directory above this one (.., but by name), change
+# the "false" below to "true", and the "xyzprod" to whatever you
+# want to call things.  Note that your tagging will have to also
+# be changed appropriately.
+
+if false
+then
+    # override the name of what to call stuff:
+    name="xyzprod"
+else
+    # make sure name is unset, so that the ${name:-blah}
+    # expansion below doesn't get stuff from your environment
+    # accidentally
+    unset name
+fi
 
 # automagical settings for things:
-path=`cat CVS/Repository`
-version=`cat Version`
-cvsvers=${name}_`echo "$version" | sed -e 's/[ \.]/_/g'`
+path="`cat CVS/Repository`"
+name="${name:-`basename "$path"`}"
+version="`cat Version`"
+cvsvers="${name}_`echo \"$version\" | sed -e 's/[ \.]/_/g'`"
 dirname="$name-$version"
+
+for item in "$dirname" "$dirname.tar" "$dirname.tar.gz"
+do
+    if [ -e "$item" ]
+    then
+	echo "Sorry, $item exists, and I need it not to." >&2
+	echo "Please remove it or update your Version file to proceed." >&2
+	exit 1
+    fi
+done
 
 # let the user know what the settings came up with:
 echo "Creating export of $name version $version (CVS: $cvsvers)"
