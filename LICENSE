@@ -1,0 +1,22 @@
+The following license and related info applies to ttyload and
+all of the supporting components:
+
+ttyload
+Copyright 1996-2001 by David Lindes, All rights reserved.
+
+This is an early "release" of ttyload.  You're welcome to use it
+how you will, and submit any patches you like back to me, but
+please do not redistribute it.  You may tell others about it,
+and have them refer to http://www.daveltd.com/src/util/ttyload/
+to get more information and/or the latest download, but please
+don't distribute it directly.
+
+I expect to release it under a different license sometime in the
+future, time TBD.
+
+Thanks,
+
+	David Lindes
+
+P.S.  Send feedback to: <src/ttyload@daveltd.com>, or whatever
+      method, if any, is given on the web page mentioned above.
