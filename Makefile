@@ -21,7 +21,7 @@ CFLAGS	= $(INCLUDES) $(OTHER_FLAGS) $(DEBUG) $(VERSION)
 default:	archbuild
 
 test:		archbuild
-	./ttyload
+	./ttyload -i 1
 
 archbuild:
 	make ttyload ARCH=`uname -s`
