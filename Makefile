@@ -11,7 +11,7 @@ LDFLAGS	= `./ldflags`
 
 OBJS	=	arch/${ARCH}/getload.o	\
 		arch/${ARCH}/terminfo.o	\
-		arch/default/homebrews.o
+		${NULL}
 
 # this is what I use most places...
 CC=gcc -pedantic -Wall
