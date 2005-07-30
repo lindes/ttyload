@@ -6,7 +6,7 @@
 # somewhere else:
 INSTALLDIR	= /usr/local/bin
 
-ARCH	= `uname -s`
+ARCH	= `uname -s | sed -e 's/ /-/g'`
 LDFLAGS	= `./ldflags`
 
 OBJS	=	arch/${ARCH}/getload.o	\
@@ -38,16 +38,23 @@ test:		$(PROGRAMS)
 	./ttyload -i 1
 
 # which architechtures are just symlinks?
-ARCHLINKS	=	\
-	arch/Darwin	\
+ARCHLINKS_FREEBSD	=	\
+	arch/Darwin		\
+	arch/Isilon-OneFS	\
+	${NULL}
+
+ARCHLINKS	=		\
+	$(ARCHLINKS_FREEBSD)	\
 	${NULL}
 
 # Some architechtures mimic eachother:
-archlinks:
-	ln -fs FreeBSD arch/Darwin
+$(ARCHLINKS_FREEBSD):
+	ln -s FreeBSD $@
+
+archlinks: $(ARCHLINKS)
 
 archbuild: archlinks
-	make archtest ttyload ARCH=`uname -s`
+	make archtest ttyload ARCH=$(ARCH)
 
 ttyload.c:	ttyload.h Version
 	touch ttyload.c
