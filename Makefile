@@ -34,11 +34,20 @@ PROGRAMS =	archbuild
 
 default:	$(PROGRAMS)
 
-test:		archbuild
+test:		$(PROGRAMS)
 	./ttyload -i 1
 
-archbuild:
-	make ttyload archtest ARCH=`uname -s`
+# which architechtures are just symlinks?
+ARCHLINKS	=	\
+	arch/Darwin	\
+	${NULL}
+
+# Some architechtures mimic eachother:
+archlinks:
+	ln -fs FreeBSD arch/Darwin
+
+archbuild: archlinks
+	make archtest ttyload ARCH=`uname -s`
 
 ttyload.c:	ttyload.h Version
 	touch ttyload.c
@@ -54,10 +63,10 @@ clean:
 	rm -f *.o $(OBJS) core a.out
 
 clobber:	clean
-	rm -f loader ttyload archtest
+	rm -f loader ttyload archtest $(ARCHLINKS)
 
 # install, gently.  not much to it:
-install:	archbuild
+install:	$(PROGRAMS)
 	/bin/cp ttyload ${INSTALLDIR}/ttyload
 
 # because different systems' make have different behaviors on how they
