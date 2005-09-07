@@ -23,5 +23,7 @@ int main(int argc, char *argv[])
 	(loads.five_minute / 1024.0),
 	(loads.fifteen_minute / 1024.0));
 
+    printf("Version: %s\n", VERSION);
+
     return(0);
 }
