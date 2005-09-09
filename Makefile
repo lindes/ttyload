@@ -43,13 +43,21 @@ ARCHLINKS_FREEBSD	=	\
 	arch/Isilon-OneFS	\
 	${NULL}
 
+ARCHLINKS_THISARCH	=	\
+	arch/thisarch		\
+	${NULL}
+
 ARCHLINKS	=		\
 	$(ARCHLINKS_FREEBSD)	\
+	$(ARCHLINKS_THISARCH)	\
 	${NULL}
 
 # Some architechtures mimic eachother:
 $(ARCHLINKS_FREEBSD):
 	ln -s FreeBSD $@
+
+$(ARCHLINKS_THISARCH):
+	ln -s ${ARCH} $@
 
 archlinks: $(ARCHLINKS)
 
