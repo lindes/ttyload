@@ -1,0 +1,28 @@
+# where to find headers (note: we still depend on Makefile to make
+# arch/thisarch -- for the moment):
+HDRS	= . arch/thisarch arch/default ;
+EXEMODE	= 755 ;
+
+# get our version information (hmm, maybe this would be cleaner if I
+# made a version.h from Version?  I'd have to figure out how to do that
+# in Jam, too, of course)
+# CCFLAGS	= -DVERSION="\\\"`cat Version`\\\"" ;
+ObjectCcFlags ttyload.c archtest.c : -DVERSION="\\\"`cat Version`\\\"" ;
+
+ARCH_SOURCES	=
+	arch/thisarch/getload.c
+	arch/thisarch/terminfo.c
+    ;
+
+# Alas, this doesn't work:
+# SoftLink arch/thisarch : arch/`uname -s | sed -e 's/ /-/g'` ;
+
+# main program:
+Main ttyload : ttyload.c $(ARCH_SOURCES) ;
+
+# XXX note: this re-builds the .o versions of $(ARCH_SOURCES), even
+# though they're already built for ttyload.  I don't grok why, or how to
+# fix it.  sigh.
+
+# archtest program:
+Main archtest : archtest.c $(ARCH_SOURCES) ;
