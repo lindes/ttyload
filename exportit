@@ -31,6 +31,9 @@ fi
 
 # automagical settings for things:
 path="`cat CVS/Repository`"
+root="`cat CVS/Root`"
+localroot="${root##*:}"
+localpath="${path##${localroot}/}"
 name="${name:-`basename "$path"`}"
 version="`cat Version`"
 cvsvers="${name}_`echo \"$version\" | sed -e 's/[ \.]/_/g'`"
@@ -50,7 +53,12 @@ done
 echo "Creating export of $name version $version (CVS: $cvsvers)"
 
 # export, and if that fails, bail.
-cvs export -d "$dirname" -r "$cvsvers" $path || exit 1
+cvs export -d "$dirname" -r "$cvsvers" $localpath || exit 1
+
+for file in `cat NOEXPORT`
+do
+    rm -rf "$dirname"/"$file"
+done
 
 # then tar and gzip:
 tar cvf "$dirname.tar" "$dirname"
