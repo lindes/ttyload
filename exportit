@@ -57,7 +57,7 @@ cvs export -d "$dirname" -r "$cvsvers" $localpath || exit 1
 
 for file in `cat NOEXPORT`
 do
-    rm -rf "$dirname"/"$file"
+    (set -x; rm -rf "$dirname"/"$file")
 done
 
 # then tar and gzip:
