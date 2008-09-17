@@ -26,7 +26,7 @@ And I know of no other utilities that perform quite this task.
 For a while, I only needed it on one platform, and so I simply
 recompiled it from time to time as I moved from one machine to
 another.  But, eventually, I stopped having such a homogeneous
-environment, and wanted it for other platforms.  But different
+environment, and wanted it for other platforms.  And different
 platforms required different methods of getting data about the
 load averages...  For a while, I didn't feel quite enough of a
 desire to have it elsewhere to make it work.  But eventually I
@@ -66,6 +66,7 @@ ttyload has been shown to run on systems running, at least:
 - FreeBSD (some version or other, I'm not familiar with their
   numbering system...  4.4, I think.)
 - Solaris 2.x and later (at least 2.6 and 8)
+- Isilon OneFS
 
 Feel free, if you like, to submit patches to add more platforms
 (or other versions of existing platforms), and please let me

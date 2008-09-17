@@ -1,25 +1,26 @@
 The following license and related info applies to ttyload and
 all of the supporting components:
 
-ttyload
-Copyright 1996-2001 by David Lindes, All rights reserved.
+* ttyload *
+Copyright 1996-2008 by David Lindes, All rights reserved.
 
-This is an early "release" of ttyload.  You're welcome to use it
-how you will, and submit any patches you like back to me, but
-please do not redistribute it.  You may tell others about it,
-and have them refer to http://www.daveltd.com/src/util/ttyload/
-to get more information and/or the latest download, but please
-don't distribute it directly.
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
 
-I expect to release it under a different license sometime in the
-future, time TBD.
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-Note:  there is absolutely no warranty of any kind on any
-software contained herein.  Use at your own risk, etc.
+It is requested, without requirement, that any enhancements to this
+software be submitted back to the author, whose contact information can
+be found at the official web page for this software:
 
-Thanks,
+    http://www.daveltd.com/src/util/ttyload/
 
-	David Lindes
-
-P.S.  Send feedback to: <src/ttyload@daveltd.com>, or whatever
-      method, if any, is given on the web page mentioned above.
+(Note: the above is a modified version of the "ISC License", as
+extracted from http://en.wikipedia.org/wiki/ISC_license 2008-09-16.)

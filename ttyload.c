@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.23 2004-07-01 19:13:13 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.24 2008-09-17 02:05:11 lindes Exp $
  *
  */
 
@@ -33,7 +33,7 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.23 2004-07-01 19:13:13 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.24 2008-09-17 02:05:11 lindes Exp $";
 
 char		strbuf[BUFSIZ],
 		*optstring	= "i:hvmr:c:",
@@ -485,7 +485,7 @@ int	compute_height(thisload, maxload, height)
     if(thisload < 0)
     	return(height + 1);
 
-    /* this is a reversal of what you might thing... the X axis
+    /* this is a reversal of what you might think... the X axis
      * is really on the top of the graph, so larger heights sit
      * lower.  the 'height -' part is implicitly done elsewhere.
      * (but not really ever actually done) */
