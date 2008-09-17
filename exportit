@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/ksh
 
 # exportit -- a simple little script to export something from a
 # CVS repository and create a "release" tarbal of it, in mostly
