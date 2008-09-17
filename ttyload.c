@@ -6,7 +6,7 @@
  * Copyright 1996 by David Lindes
  * all right reserved.
  *
- * Version information: $Id: ttyload.c,v 1.24 2008-09-17 02:05:11 lindes Exp $
+ * Version information: $Id: ttyload.c,v 1.25 2008-09-17 02:30:45 lindes Exp $
  *
  */
 
@@ -33,25 +33,31 @@
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
 
-char *c="$Id: ttyload.c,v 1.24 2008-09-17 02:05:11 lindes Exp $";
+char *c="$Id: ttyload.c,v 1.25 2008-09-17 02:30:45 lindes Exp $";
 
 char		strbuf[BUFSIZ],
 		*optstring	= "i:hvmr:c:",
 		*usage	=
-		    "Usage: %s [-i secs]\n"
+		    "Usage: %s [<options>]\n"
+		    "\n"
+		    " Available options:\n"
 		    "  -h -- show this help, then exit\n"
 		    "  -v -- show version info, then exit\n"
-		    "  -m -- monochrome mode\n"
+		    "  -m -- monochrome mode (no ANSI escapes)\n"
 		    "  -c cols -- how many cols wide is the screen?\n"
 		    "  -r rows -- how many rows high is the screen?\n"
+		    "     (these two options override the default\n"
+		    "     behavior of auto-determining screen size)\n"
 		    "  -i secs\n"
 		    "     Alter the number of seconds in "
-			"the interval between refreshes\n"
+			"the interval between refreshes.\n"
 		    "     The default is 4, and the minimum "
 			"is 1, which is silently clamped.\n\n"
 		    "  (Note: use ctrl-C to quit)\n\n"
 		    "  For updates and other info, see http://"
-		    	"www.daveltd.com/src/util/ttyload/\n";
+		    	"www.daveltd.com/src/util/ttyload/\n"
+		    "  Donations appreciated.\n"
+		    "";
 int		clockpad, clocks;
 clock_info	*theclocks;
 
