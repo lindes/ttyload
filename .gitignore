@@ -1,3 +1,7 @@
 ttyload
 archtest
 loader
+*.o
+arch/Darwin
+arch/Isilon-OneFS
+arch/thisarch
