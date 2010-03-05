@@ -14,7 +14,7 @@ OBJS	=	arch/${ARCH}/getload.o	\
 		${NULL}
 
 # this is what I use most places...
-CC=gcc -pedantic -Wall
+CC=gcc -pedantic -Wall -Werror
 
 # for the things in the sub-directory:
 INCLUDES	=	-I$${PWD:-.} \
