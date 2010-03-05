@@ -44,20 +44,17 @@ char		strbuf[BUFSIZ],
 		    "  -h -- show this help, then exit\n"
 		    "  -v -- show version info, then exit\n"
 		    "  -m -- monochrome mode (no ANSI escapes)\n"
-		    "  -c cols -- how many cols wide is the screen?\n"
-		    "  -r rows -- how many rows high is the screen?\n"
-		    "     (these two options override the default\n"
-		    "     behavior of auto-determining screen size)\n"
+		    "  -c cols -- how wide is the screen?\n"
+		    "  -r rows -- and how high?\n"
+		    "     (these override the default auto-detect)\n"
 		    "  -i secs\n"
 		    "     Alter the number of seconds in "
 			"the interval between refreshes.\n"
 		    "     The default is 4, and the minimum "
 			"is 1, which is silently clamped.\n\n"
 		    "  (Note: use ctrl-C to quit)\n\n"
-		    "  For updates and other info, see http://"
-		    	"www.daveltd.com/src/util/ttyload/\n"
-		    "  Donations appreciated.\n"
-		    "";
+		    "  For more info, see http://"
+		    	"www.daveltd.com/src/util/ttyload/\n";
 int		clockpad, clocks;
 clock_info	*theclocks;
 
