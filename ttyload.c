@@ -3,10 +3,11 @@
  *
  * tty equivalent to xload
  *
- * Copyright 1996 by David Lindes
- * all right reserved.
+ * Copyright 1996-2011 by David Lindes
+ * All rights reserved.
  *
- * Version information: $Id: ttyload.c,v 1.25 2008-09-17 02:30:45 lindes Exp $
+ * Version information... stored in git now.  Hopefully you're looking
+ * at this file from a git repo, and don't care.  :)
  *
  */
 
@@ -32,8 +33,6 @@
 
 #define	MINROWS		(HEIGHTPAD + 6)
 #define	MINCOLS		(WIDTHPAD + 6)
-
-char *c="$Id: ttyload.c,v 1.25 2008-09-17 02:30:45 lindes Exp $";
 
 char		strbuf[BUFSIZ],
 		*optstring	= "i:hvmr:c:",

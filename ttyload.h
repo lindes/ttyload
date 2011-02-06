@@ -3,12 +3,10 @@
  *
  * support file for ttyload.c
  *
- * Copyright 1996 David Lindes,
- * all rights reserved.
+ * Copyright 1996-2011 David Lindes.
+ * All rights reserved.
  *
  */
-
-#define	TTYLOAD_H_IDENT	"$Id: ttyload.h,v 1.6 2001-08-28 01:00:31 lindes Exp $";
 
 #define	MIN(a,b)	(((a)<(b))?(a):(b))
 #define	MAX(a,b)	(((a)>(b))?(a):(b))
