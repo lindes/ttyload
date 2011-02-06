@@ -1,0 +1,8 @@
+0.5.1
+	Converted to Git; uploaded to GitHub; documentation tweaks
+
+0.5, and prior
+	See http://www.daveltd.com/src/util/ttyload/changelog.html
+	for history further back; this is currently maintained in a
+	separate repository for my website, though I'll likely move
+	it into this tree at some point.
