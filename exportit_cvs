@@ -1,17 +1,15 @@
 #!/bin/ksh
 
 # exportit -- a simple little script to export something from a
-# git repository and create a "release" tarbal of it, in mostly
-# automated fasion.  Re-written from an earlier CVS version.
+# CVS repository and create a "release" tarbal of it, in mostly
+# automated fasion.  Could probably stand do more error
+# checking, but if things are happy, it works.  :-)  Note that
+# people getting this with ttyload will have no reason to use it
+# in conjunction with ttyload.
 
-# Note that people getting this with ttyload will presumably have no
-# reason to use it in conjunction with ttyload, unless they're forking
-# their own version.  I'd much prefer to get patches or pull requests
-# (e.g. on GitHub, though from your own git repo is fine, too).
-
-# Copyright 2001-2011 by David Lindes, All Rights Reserved.
-# Distributed under the license described in the file LICENSE that
-# comes with ttyload.
+# Copyright 2001 by David Lindes, All Rights Reserved.
+# Distributed under the license described in the file LICENSE
+# that comes with ttyload.
 
 # if you're wanting to use this script for some other project,
 # and you want to call your release something other than the
@@ -32,12 +30,16 @@ else
 fi
 
 # automagical settings for things:
-name="${name:-ttyload}" # this used to be automatic, from CVS info.  Skipping that now.
+path="`cat CVS/Repository`"
+root="`cat CVS/Root`"
+localroot="${root##*:}"
+localpath="${path##${localroot}/}"
+name="${name:-`basename "$path"`}"
 version="`cat Version`"
-tagname="${name}_`echo \"$version\" | sed -e 's/[ \.]/_/g'`"
+cvsvers="${name}_`echo \"$version\" | sed -e 's/[ \.]/_/g'`"
 dirname="$name-$version"
 
-for item in "$dirname.tar" "$dirname.tar.gz" "$dirname.tar.bz2"
+for item in "$dirname" "$dirname.tar" "$dirname.tar.gz"
 do
     if [ -e "$item" ]
     then
@@ -48,10 +50,16 @@ do
 done
 
 # let the user know what the settings came up with:
-echo "Creating export of $name version $version (tag: $tagname)"
+echo "Creating export of $name version $version (CVS: $cvsvers)"
 
 # export, and if that fails, bail.
-git archive --prefix=$dirname/ -o $dirname.tar $tagname || exit 1
+cvs export -d "$dirname" -r "$cvsvers" $localpath || exit 1
 
-# then bzip:
-bzip2 -9fv "$dirname.tar"
+for file in `cat NOEXPORT`
+do
+    (set -x; rm -rf "$dirname"/"$file")
+done
+
+# then tar and gzip:
+tar cvf "$dirname.tar" "$dirname"
+gzip -9fv "$dirname.tar"
