@@ -1,8 +1,10 @@
 Lots of stuff todo...  here are a few big items:
 
--	convert to using curses (or similar, perhaps)
--	make the clock stamps cleaner when using large -i values
--	write a man page
+- convert to using an MVC-like structure of things, to make it much
+  easier in the future to create curses and/or other (OpenGL? ;)
+  front-ends.
+- once that's done, right a curses (or similar) front-end
+- make the clock stamps cleaner when using large -i values
 
 Also, see http://www.daveltd.com/src/util/ttyload/ for other
 stuff that may be on my list.
