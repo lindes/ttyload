@@ -290,7 +290,7 @@ int main(argc, argv, envp)
 		(loadavgs[i].one_minute / 1024.),
 		(loadavgs[i].five_minute / 1024.),
 		(loadavgs[i].fifteen_minute / 1024.),
-		strbuf + 1,
+		strbuf,
 		version);
 
 	if(debug > 3)
