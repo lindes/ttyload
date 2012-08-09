@@ -133,3 +133,7 @@ presumably 'q' and/or '<esc>' will work too.
   at <src/ttyload@daveltd.com> (yes, '/' is valid in an e-mail address!
   If your mailer can't hack it, though, you can substitute '-' for it,
   if you must).
+
+- Feel free to
+  [![Flattr this project](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=lindes&url=https://github.com/lindes/ttyload&title=ttyload&tags=github&category=software),
+  if you find it useful.  Your support would be appreciated.  :)
