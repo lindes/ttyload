@@ -53,7 +53,7 @@ versions as they become available, point your browser towards:
 
 Thanks,
 
-	David Lindes
+David Lindes
 
 ## PLATFORMS...
 
