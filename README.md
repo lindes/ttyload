@@ -1,9 +1,7 @@
 Home page: http://www.daveltd.com/src/util/ttyload/
 GitHub:    https://github.com/lindes/ttyload/
 
-****************
-* INTRODUCTION *
-****************
+## INTRODUCTION
 
 Hi there,
 
@@ -57,9 +55,7 @@ Thanks,
 
 	David Lindes
 
-****************
-* PLATFORMS... *
-****************
+## PLATFORMS...
 
 ttyload has been shown to run on systems running, at least:
 
@@ -75,9 +71,7 @@ Feel free, if you like, to submit patches to add more platforms
 (or other versions of existing platforms), and please let me
 know also if it runs unmodified on any other platforms.
 
-****************
-* INSTALLATION *
-****************
+## INSTALLATION
 
 to build ttyload, in theory all you need to is type 'make'.  If
 you want to also install it, 'make install' should do the trick,
@@ -85,9 +79,7 @@ which will copy it to /usr/local/bin (or another directory if
 you edit the INSTALLDIR setting in the Makefile or do
 'make install INSTALLDIR=whatever').
 
-****************
-* RUN-TIME FOO *
-****************
+## RUN-TIME FOO
 
 After building, you can run ttyload with './ttyload' (or just
 'ttyload' if either '.' is in your $PATH, or you did the make
@@ -107,9 +99,7 @@ and then simultaneously press the "c" key), or whatever you have
 'stty intr' set to.  If and when I have a curses mode,
 presumably 'q' and/or '<esc>' will work too.
 
-****************
-* OTHER THINGS *
-****************
+## OTHER THINGS
 
 - ttyload -h gives you usage info.
 
