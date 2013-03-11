@@ -254,16 +254,6 @@ int main(argc, argv, envp)
 	    theclock++;
 	    theclock	%= clocks;
 
-	    if(theclock >= clocks)
-	    {
-		/* Hopefully, I'll get this to the point
-		   where it well never happen...  As I first
-		   write it, I'm fairly certain it will, but
-		   that should be fixable... */
-		fprintf(stderr, "Internal error: too many clocks!");
-		exit(1);
-	    }
-
 	    /* as a temporary cleanup functionality after
 	     * changing from clear_screen on every iteration to
 	     * home_screen on all but the first, but since it's
