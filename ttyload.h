@@ -27,9 +27,11 @@ typedef struct load_list {
 	int	numloads;
     } load_list;
 
+/* storage for clock display along the bottom */
 typedef struct clock_info {
 	int	pos;
 	char	clock[6];
+        time_t  when;
     } clock_info;
 
 /* functions in arch-specific files: */

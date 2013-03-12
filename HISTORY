@@ -1,3 +1,7 @@
+0.5.3
+        Fixed up time display more, especially for e.g. -i 120
+        (see https://github.com/lindes/ttyload/issues/1 )
+
 0.5.2
         Fixed a bug in time display
 

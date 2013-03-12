@@ -84,11 +84,14 @@ int	rows		= 40,
 	cols		= 80,
 
 	intsecs		= 4,
-	debug		= 3,
+	debug		= 0,
 	theclock	= 0,
 
 	height, width;
 
+/* other globals (ugh, I know, but it's a simple program, that needs re-writing) */
+char	hostname[HOSTLENGTH + 1];
+load_list	*loadavgs;
 
 int	compute_height(load_t, load_t, int);
 void	showloads(load_list *);
@@ -97,15 +100,60 @@ void	home_screen();
 void	cycle_load_list(load_list*, load_list, int);
 void	initialize_load_list(load_list *list, int size);
 
+void print_header(int current)
+{
+	printf("%s   %.2f, %.2f, %.2f   %s       ttyload, v%s\n\n",
+		hostname,
+		(loadavgs[current].one_minute / 1024.),
+		(loadavgs[current].five_minute / 1024.),
+		(loadavgs[current].fifteen_minute / 1024.),
+		strbuf,
+		version);
+}
+
+void update_clocks(time_t thetime, struct tm *thetimetm, int position)
+{
+    int lastclock = (theclock + clocks - 1) % clocks;
+
+    /* if we don't have a previous clock, or "enough" time has past to have another */
+    if(theclocks[lastclock].pos < 0 /* getting-started special */ ||
+       (((thetime - theclocks[lastclock].when) >= CLOCKWIDTH * intsecs) && /* enough visual buffer space */
+        ((thetime / 60) > (theclocks[lastclock].when / 60)))) /* at least a minute (for different value) */
+    {
+        if(!strftime(strbuf, 7, "^%H:%M", thetimetm))
+        {
+            /* This should never happen, I hope... */
+            perror("strftime failed");
+            exit(1);
+        }
+
+        /* set up the current clock: */
+        theclocks[theclock].pos	= position;
+        strcpy(theclocks[theclock].clock, strbuf);
+        theclocks[theclock].when = thetime;
+
+        ++theclock;
+        theclock	%= clocks;
+
+        /* as a temporary cleanup functionality after changing from
+         * clear_screen on every iteration to home_screen on all but
+         * the first, but since it's nice to occasionally actually
+         * clear (at least until we're actually using curses or the
+         * like, when we can put that activity on SIGWINCH and ctrl-L
+         * command, or the like), I'm using the enclosing if()
+         * condition as a "good" time to do that: */
+        clear_screen();
+    }
+}
+
 int main(argc, argv, envp)
     int		argc;
     char	*argv[],
 		*envp[];
 {
-    load_list	*loadavgs, newload;
+    load_list	newload;
     int		c, i, errflag=0, versflag=0;
     char	*basename;
-    char	hostname[HOSTLENGTH + 1];
     time_t	thetime;
     struct tm	*thetimetm;
 
@@ -226,7 +274,7 @@ int main(argc, argv, envp)
 
     clear_screen();
 
-    for(i=0;i<width;i++)
+    for(i=0; i<width; ++i /* note: gets decremented, too; this is forever! */)
     {
 	if(i != 0)
 	{
@@ -239,32 +287,7 @@ int main(argc, argv, envp)
 
 	getload(&loadavgs[i]);
 
-	/* TODO: fix minor bug here where we can potentially miss a
-	 * minute marker if sleep() takes too long... */
-	if(((thetimetm->tm_sec) / intsecs) == 0)
-	{
-	    if(!strftime(strbuf, 7, "^%H:%M", thetimetm))
-	    {
-		/* This should never happen, I hope... */
-		perror("strftime failed");
-		exit(1);
-	    }
-	    theclocks[theclock].pos	= i;
-	    strcpy(theclocks[theclock].clock, strbuf);
-	    theclock++;
-	    theclock	%= clocks;
-
-	    /* as a temporary cleanup functionality after
-	     * changing from clear_screen on every iteration to
-	     * home_screen on all but the first, but since it's
-	     * nice to occasionally actually clear (at least
-	     * until we're actually using curses or the like,
-	     * when we can put that activity on SIGWINCH and
-	     * ctrl-L command, or the like), I'm using the
-	     * enclosing if() condition as a "good" time to do
-	     * that: */
-	    clear_screen();
-	}
+        update_clocks(thetime, thetimetm, i);
 
 	if(!strftime(strbuf, 9, "%H:%M:%S", thetimetm))
 	{
@@ -274,14 +297,7 @@ int main(argc, argv, envp)
 	}
 
 	home_screen();
-
-	printf("%s   %.2f, %.2f, %.2f   %s       ttyload, v%s\n\n",
-		hostname,
-		(loadavgs[i].one_minute / 1024.),
-		(loadavgs[i].five_minute / 1024.),
-		(loadavgs[i].fifteen_minute / 1024.),
-		strbuf,
-		version);
+        print_header(i);
 
 	if(debug > 3)
 	    printf("Load averages: %f, %f, %f\n",
@@ -442,7 +458,7 @@ void	showloads(loadavgs)
 
     for(i=0;i<clocks;i++)
     {
-	if(theclocks[i].pos > 0)
+	if(theclocks[i].pos >= 0)
 	{
 	    strncpy(
 		    &strbuf[9+theclocks[i].pos],
