@@ -8,6 +8,8 @@
  *
  */
 
+#include <time.h> /* because we use time_t inside this file */
+
 #define	MIN(a,b)	(((a)<(b))?(a):(b))
 #define	MAX(a,b)	(((a)>(b))?(a):(b))
 
