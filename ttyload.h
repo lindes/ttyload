@@ -8,6 +8,8 @@
  *
  */
 
+#ifndef TTYLOAD_H_IDENT
+
 #include <time.h> /* because we use time_t inside this file */
 
 #define	MIN(a,b)	(((a)<(b))?(a):(b))
@@ -39,3 +41,5 @@ typedef struct clock_info {
 /* functions in arch-specific files: */
 extern	void	getload(load_list *);
 extern	void	gettermsize();
+
+#endif /* ifndef TTYLOAD_H_IDENT */
