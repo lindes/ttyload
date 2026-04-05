@@ -16,7 +16,7 @@ situations, such as when logged in on a non-graphical console,
 or logging in remotely without an ability to forward X, etc...
 
 So, I wrote it.  Now, when I originally wrote it, I was pretty
-inexperienced, so, while I new about curses, and that it would
+inexperienced, so while I knew about curses, and that it would
 be nice to have this utility written with it, I didn't feel up
 to figuring it out and making that go, so I just used the fact
 that I happened to know a few ANSI escape sequences, and faked
