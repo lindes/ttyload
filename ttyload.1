@@ -1,102 +1,93 @@
-.TH "ttyload" "1" "2001-08-24" "" "" 
-.SH "NAME" 
-ttyload \- a tty-based xload equivalent
-.SH "SYNOPSIS" 
-.PP 
-ttyload [options]
-.PP 
-.SH "DESCRIPTION" 
-.PP 
-ttyload is a "tty" based load monitoring tool\&.  Not entirely unlike
-xload, it plots a graph of a system's "load average" data\&.  Unlike
-xload, it uses 3 line graphs to plot things, instead of a single fill
-graph, so that it can show you not only the 1-minute load average, but
-also the 5-minute and 15-minute averages\&.  Also unlike xload, it uses
-a basic terminal (tty) to display the information, instead of an X
-window\&.  ANSI escape sequences are used (optionally) for colorization
-and screen manipulation\&.
-.PP 
+.Dd August 24, 2001
+.Dt TTYLOAD 1
+.Os
+.Sh NAME
+.Nm ttyload
+.Nd a tty-based xload equivalent
+.Sh SYNOPSIS
+.Nm ttyload
+.Op Fl hvm
+.Op Fl c Ar cols
+.Op Fl r Ar rows
+.Op Fl i Ar seconds
+.Sh DESCRIPTION
+.Nm
+is a
+.Dq tty
+based load monitoring tool.
+Not entirely unlike xload, it plots a graph of a system's
+.Dq load average
+data.
+Unlike xload, it uses 3 line graphs to plot things, instead of a single
+fill graph, so that it can show you not only the 1-minute load average,
+but also the 5-minute and 15-minute averages.
+Also unlike xload, it uses a basic terminal
+.Pq tty
+to display the information, instead of an X window.
+ANSI escape sequences are used
+.Pq optionally
+for colorization and screen manipulation.
+.Pp
 A few of the main features of ttyload are:
-.PP 
-.IP o 
-graphs load averages (all 3 numbers) over time
-.IP o 
+.Bl -bullet
+.It
+graphs load averages
+.Pq all 3 numbers
+over time
+.It
 uses ANSI escape sequences to colorize graphs
-.IP o
+.It
 works without requiring X11 libraries, in a Terminal window
-.IP o
+.It
 automatically determines screen size by default
-.PP 
-\" .SH "GENERAL" 
-\" .PP 
-\" See DESCRIPTION\&.
-\" .PP 
-.SH "USAGE" 
-.PP 
+.El
+.Sh USAGE
 The easiest way to use ttyload is just to invoke the command, with no
-additional options\&.
-.PP 
-Additional options are described below\&.
-.PP
-To quit ttyload, enter the terminal's interrupt character (typically
-control-C)\&.
-.PP 
-\" .SH "EXAMPLES" 
-\" .PP 
-\" Here are some examples of how I use ttyload\&.
-\" .PP 
-\" No examples written\&.
-\" .RE
-.PP 
-.SH "OPTIONS" 
-.PP 
-ttyload uses standard getopt() style options processing\&.
+additional options.
+.Pp
+Additional options are described below.
+.Pp
+To quit ttyload, enter the terminal's interrupt character
+.Pq typically control-C .
+.Sh OPTIONS
+.Nm
+uses standard
+.Xr getopt 3
+style options processing.
 Available options are:
-.PP 
-
-.DS 
-
-.PP
-.IP "\fB-h\fP" 
-Display a brief usage statement ("help")\&.
-.IP "\fB-v\fP" 
-show version info, then exit
-.IP "\fB-m\fP" 
-monochrome mode (no ANSI escapes)
-.IP "\fB-c <cols>\fP" 
-Sets the number of columns wide to make the display
-.IP "\fB-r <rows>\fP" 
-Sets the number of rows high to make the display
-(these two options combine to override the default behavior of
-auto-determining screen size)
-.IP "\fB-i <seconds>\fP" 
-Alter the number of seconds in the interval between
-refreshes\&.  The default is 4, and the minimum is 1, which is silently
-clamped\&.  
-.DE 
- 
-
-.PP 
-.PP 
-.SH "SEE ALSO" 
-.PP 
-getopt(3)
-.PP 
-.PP 
-.SH "VERSION" 
-This man page is current for version 0\&.5 of ttyload
-.PP 
-.SH "THANKS" 
-.PP 
+.Bl -tag -width "-i seconds "
+.It Fl h
+Display a brief usage statement
+.Pq Dq help .
+.It Fl v
+Show version info, then exit.
+.It Fl m
+Enable monochrome mode
+.Pq no ANSI escapes .
+.It Fl c Ar cols
+Set the number of columns wide to make the display.
+If not specified, the default is to determine width automatically.
+.It Fl r Ar rows
+Set the number of rows high to make the display.
+If not specified, the default is to determine height automatically.
+.It Fl i Ar seconds
+Alter the number of seconds in the interval between refreshes.
+The default is 4, and the minimum is 1, which is silently clamped.
+.El
+.Sh SEE ALSO
+.Xr getopt 3
+.Sh VERSION
+This man page is current for version 0.5 of
+.Nm .
+.Sh THANKS
 Thanks to several my friends for testing things out on various
 platforms, or lending me accounts on their machines upon which
-to do porting\&.
-.PP 
-.SH "AUTHOR" 
-.PP 
-ttyload was written by David Lindes\&.  Please send any feedback,
-including bug reports and patches, to me\&.  My contact information (as
-well as updates and other information) can be found on the ttyload web
-page at:
-http://www\&.daveltd\&.com/src/util/ttyload/
-.PP 
+to do porting.
+.Sh AUTHOR
+.Nm
+was written by David Lindes.
+Please send any feedback, including bug reports and patches, to me.
+My contact information
+.Pq as well as updates and other information
+can be found on the ttyload web page at:
+.Lk http://www.daveltd.com/src/util/ttyload/
